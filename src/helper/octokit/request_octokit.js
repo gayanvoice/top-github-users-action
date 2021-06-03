@@ -12,6 +12,7 @@ let requestOctokit = function () {
         let hasNextPage = true;
         let cursor = null;
         let array = [];
+        let iterations = 0;
         for (; hasNextPage;) {
             let octokitResponseModel = await octokit.request(setQuery(location), cursor);
             if(octokitResponseModel.status){
@@ -21,7 +22,9 @@ let requestOctokit = function () {
                     console.log(user.login)
                     array.push(user)
                 }
+                iterations++;
             }
+            if(iterations === 2) break;
         }
         return array;
     }

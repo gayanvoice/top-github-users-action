@@ -1,6 +1,7 @@
 const {graphql} = require("@octokit/graphql");
 const OctokitResponseModel = require('../model/octokit/OctokitResponseModel');
 let octokit = (function () {
+    // const AUTH_KEY = "";
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     let getHeader = function () {
        return  {
