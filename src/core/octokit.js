@@ -53,6 +53,7 @@ let octokit = (function () {
             const response = await graphqlWithAuth(getQuery(locations, 10, setCursor(cursor)));
             return new OctokitResponseModel(true, response);
         } catch (error) {
+            console.log(error)
             return new OctokitResponseModel(false)
         }
 
