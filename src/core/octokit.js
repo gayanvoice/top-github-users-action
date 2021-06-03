@@ -1,10 +1,11 @@
 const {graphql} = require("@octokit/graphql");
 const OctokitResponseModel = require('../model/octokit/OctokitResponseModel');
 let octokit = (function () {
-    let getHeader = function (token) {
+    const AUTH_KEY = process.env.INSIGHTS_TOKEN;
+    let getHeader = function () {
        return  {
             headers: {
-                authorization: `token ${token}`,
+                authorization: `token ${AUTH_KEY}`,
             },
         }
     }
@@ -47,7 +48,7 @@ let octokit = (function () {
     }
     let request = async function (locations, cursor) {
         try{
-            const graphqlWithAuth = graphql.defaults(getHeader('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'));
+            const graphqlWithAuth = graphql.defaults(getHeader());
             const response = await graphqlWithAuth(getQuery(locations, 10, setCursor(cursor)));
             return new OctokitResponseModel(true, response);
         } catch (error) {
