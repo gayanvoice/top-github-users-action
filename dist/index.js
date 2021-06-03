@@ -6255,7 +6255,7 @@ let requestOctokit = function () {
             } else {
                 hasNextPage = false;
             }
-            if(iterations === 2) hasNextPage = false;
+            if(iterations === 20) hasNextPage = false;
         }
         return array;
     }
