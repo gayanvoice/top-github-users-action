@@ -10,10 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
         with:
-          token: ${{ secrets.CUSTOM_TOKEN }}
+          token: ${{ secrets.INSIGHTS_TOKEN }}
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 14.17.0
+      - run: npm ci
       - run: npm test
-        env:
-          INSIGHTS_TOKEN: ${{ secrets.CUSTOM_TOKEN }}
