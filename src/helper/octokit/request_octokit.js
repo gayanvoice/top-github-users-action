@@ -23,8 +23,10 @@ let requestOctokit = function () {
                     array.push(user)
                 }
                 iterations++;
+            } else {
+                hasNextPage = false;
             }
-            if(iterations === 2) break;
+            if(iterations === 2) hasNextPage = false;
         }
         return array;
     }
