@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
         with:
-          token: ${{ secrets.INSIGHTS_TOKEN }}
+          token: ${{ secrets.CUSTOM_TOKEN }}
       - uses: actions/setup-node@v2.1.5
         with:
           node-version: 14.17.0
