@@ -1,0 +1,35 @@
+{
+  "name": "github-most-active-users",
+  "version": "1.0.0",
+  "description": "Fetch most active users by country in every 24 hours",
+  "main": "dist/index.js",
+  "scripts": {
+    "prepare": "ncc build src/index.js -o dist --source-map --license licenses.txt",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gayanvoice/github-most-active-users.git"
+  },
+  "keywords": [
+    "GitHub",
+    "Actions",
+    "JavaScript"
+  ],
+  "author": "Gayan Kuruppu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gayanvoice/github-most-active-users/issues"
+  },
+  "homepage": "https://github.com/gayanvoice/github-most-active-users#readme",
+  "dependencies": {
+    "@actions/core": "1.2.5",
+    "@octokit/graphql": "4.6.2",
+    "fs-extra": "9.1.0",
+    "simple-git": "2.39.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "0.27.0",
+    "jest": "26.6.3"
+  }
+}
