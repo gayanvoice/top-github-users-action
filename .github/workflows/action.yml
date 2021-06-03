@@ -1,0 +1,19 @@
+name: GitHub Insights CI
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+jobs:
+  release:
+    name: GitHub Insights
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          token: ${{ secrets.INSIGHTS_TOKEN }}
+      - uses: actions/setup-node@v2.1.5
+        with:
+          node-version: 14.17.0
+      - run: npm test
+        env:
+          INSIGHTS_TOKEN: ${{ secrets.INSIGHTS_TOKEN }}
