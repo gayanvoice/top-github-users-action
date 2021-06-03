@@ -1,4 +1,4 @@
-name: GitHub Insights CI
+name: GitHub most active users
 on:
   schedule:
     - cron: '0 */6 * * *'
