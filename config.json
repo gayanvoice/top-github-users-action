@@ -1,6 +1,6 @@
 {
   "devMode": "true",
   "locations":[
-    { "country":  "sri lanka", "cities": ["colombo"] }
+    { "country":  "sri lanka", "cities": ["colombo", "kandy", "gampaha", "galle", "jaffna", "matara"] }
   ]
 }

@@ -12881,7 +12881,7 @@ module.exports = git;
 const {graphql} = __nccwpck_require__(8467);
 const OctokitResponseModel = __nccwpck_require__(5857);
 let octokit = (function () {
-    // const AUTH_KEY = "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";
+    // const AUTH_KEY = "";
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     let getHeader = function () {
        return  {
@@ -13105,10 +13105,10 @@ let requestOctokit = function () {
         return query;
     }
     let request = async function (location) {
+        console.log(setQuery(location))
         let hasNextPage = true;
         let cursor = null;
         let array = [];
-        let iterations = 0;
         for (; hasNextPage;) {
             let octokitResponseModel = await octokit.request(setQuery(location), cursor);
             if(octokitResponseModel.status){
@@ -13118,9 +13118,7 @@ let requestOctokit = function () {
                     console.log(user.login)
                     array.push(user)
                 }
-                iterations++;
             }
-            if(iterations === 20) hasNextPage = false;
         }
         return array;
     }
