@@ -12930,7 +12930,7 @@ let octokit = (function () {
     let request = async function (locations, cursor) {
         try{
             const graphqlWithAuth = graphql.defaults(getHeader());
-            const response = await graphqlWithAuth(getQuery(locations, 10, setCursor(cursor)));
+            const response = await graphqlWithAuth(getQuery(locations, 20, setCursor(cursor)));
             return new OctokitResponseModel(true, response);
         } catch (error) {
             console.log(error)
