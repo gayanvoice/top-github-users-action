@@ -9,7 +9,7 @@ let OctokitNodeModel =  function (node) {
     this.avatarUrl = node.avatarUrl;
     this.location = node.location;
     this.followers = node.followers.totalCount;
-    this.public = setPublicContributions(node.contributionsCollection);
-    this.private = node.contributionsCollection.restrictedContributionsCount;
+    this.privateContributions = node.contributionsCollection.restrictedContributionsCount;
+    this.publicContributions = setPublicContributions(node.contributionsCollection);
 }
 module.exports = OctokitNodeModel;

@@ -12951,6 +12951,7 @@ module.exports = octokit;
 
 const core = __nccwpck_require__(2186);
 const file = __nccwpck_require__(6990);
+const ReadCacheResponseModel = __nccwpck_require__(128);
 let outputCache = (function () {
     let getCountryName = function (country) {
         return country.replace(' ', '_').toLowerCase();
@@ -12965,8 +12966,27 @@ let outputCache = (function () {
             core.info(outputFileResponseModel.message)
         }
     }
+    let read = async function (location) {
+        let fileName = getCountryName(location[0])
+        let path = `cache/${fileName}.json`;
+        let readFileResponseModel = await file.readJson(path);
+        if(readFileResponseModel.status){
+            return new ReadCacheResponseModel(
+                readFileResponseModel.status,
+                readFileResponseModel.content.login,
+                readFileResponseModel.content.name,
+                readFileResponseModel.content.avatarUrl,
+                readFileResponseModel.content.location,
+                readFileResponseModel.content.followers,
+                readFileResponseModel.content.privateContributions,
+                readFileResponseModel.content.publicContributions)
+        } else {
+            return new ReadCacheResponseModel(readFileResponseModel.status)
+        }
+    }
     return {
-        save: save
+        save: save,
+        read: read
     };
 })();
 module.exports = outputCache;
@@ -13133,23 +13153,30 @@ module.exports = requestOctokit;
 /***/ 4351:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2186);
 const pullGit = __nccwpck_require__(8591);
 const commitGit = __nccwpck_require__(6763);
 const pushGit = __nccwpck_require__(6278);
 const configFile = __nccwpck_require__(6264);
 const outputCache = __nccwpck_require__(9862);
-const markdownFile = __nccwpck_require__(2025);
+const outputMarkdown = __nccwpck_require__(2025);
 const requestOctokit = __nccwpck_require__(639);
 let Index = function () {
+    let saveCache = async function (locations) {
+        for await(const location of locations){
+            let json = await requestOctokit.request(location);
+            await outputCache.save(location, json);
+        }
+    }
+    let saveMarkdown = async function (locations) {
+        for await(const location of locations){
+            let readCacheResponseModel =  await outputCache.read(location);
+        }
+    }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
         if(readConfigResponseModel.status){
             if(!readConfigResponseModel.devMode) await pullGit.pull();
-            for await(const location of readConfigResponseModel.locations){
-                let json = await requestOctokit.request(location);
-                await outputCache.save(location, json);
-            }
+            await saveCache(readConfigResponseModel.locations);
             if(!readConfigResponseModel.devMode){
                 await commitGit.commit("Update users");
                 await pushGit.push();
@@ -13161,6 +13188,40 @@ let Index = function () {
     };
 }();
 Index.main().then(() => { });
+
+/***/ }),
+
+/***/ 128:
+/***/ ((module) => {
+
+let ReadCacheResponseModel = function (status,
+                                       login,
+                                       name,
+                                       avatarUrl,
+                                       location,
+                                       followers,
+                                       publicContributions,
+                                       privateContributions) {
+    let validate = function (value) {
+        return (value === '' || value === null || value === undefined);
+    }
+    let setValue = function (value) {
+        if (validate(value)) {
+            return "undefined value";
+        } else {
+            return value;
+        }
+    }
+    this.status = status;
+    if (status) this.login = setValue(login);
+    if (status) this.name = setValue(name);
+    if (status) this.avatarUrl = setValue(avatarUrl);
+    if (status) this.location = setValue(location);
+    if (status) this.followers = setValue(followers);
+    if (status) this.privateContributions = setValue(privateContributions);
+    if (status) this.publicContributions = setValue(publicContributions);
+}
+module.exports = ReadCacheResponseModel;
 
 /***/ }),
 
@@ -13239,8 +13300,8 @@ let OctokitNodeModel =  function (node) {
     this.avatarUrl = node.avatarUrl;
     this.location = node.location;
     this.followers = node.followers.totalCount;
-    this.public = setPublicContributions(node.contributionsCollection);
-    this.private = node.contributionsCollection.restrictedContributionsCount;
+    this.privateContributions = node.contributionsCollection.restrictedContributionsCount;
+    this.publicContributions = setPublicContributions(node.contributionsCollection);
 }
 module.exports = OctokitNodeModel;
 
