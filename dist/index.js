@@ -12930,7 +12930,7 @@ let octokit = (function () {
     let request = async function (locations, cursor) {
         try{
             const graphqlWithAuth = graphql.defaults(getHeader());
-            const response = await graphqlWithAuth(getQuery(locations, 20, setCursor(cursor)));
+            const response = await graphqlWithAuth(getQuery(locations, 10, setCursor(cursor)));
             return new OctokitResponseModel(true, response);
         } catch (error) {
             console.log(error)
@@ -12949,47 +12949,59 @@ module.exports = octokit;
 /***/ 9862:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2186);
-const file = __nccwpck_require__(6990);
-const ReadCacheResponseModel = __nccwpck_require__(128);
+const cacheFile = __nccwpck_require__(845);
 let outputCache = (function () {
     let getCountryName = function (country) {
         return country.replace(' ', '_').toLowerCase();
     }
-    let save = async function (location, json) {
-        let fileName = getCountryName(location[0])
-        let path = `cache/${fileName}.json`;
-        let outputFileResponseModel = await file.outputJson(path, json);
+    let getPath = function (country) {
+        let fileName = getCountryName(country)
+        return `cache/${fileName}.json`;
+    }
+    let saveCacheFile = async function (country, json) {
+        await cacheFile.outputCacheFile(getPath(country), json);
+    }
+    let readCacheFile = async function (country) {
+        return await cacheFile.readCacheFile(getPath(country));
+    }
+    return {
+        saveCacheFile: saveCacheFile,
+        readCacheFile: readCacheFile
+    };
+})();
+module.exports = outputCache;
+
+
+/***/ }),
+
+/***/ 845:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const file = __nccwpck_require__(6990);
+const ReadCacheResponseModel = __nccwpck_require__(128);
+let cacheFile = (function () {
+    let outputCacheFile = async function (fileName, json) {
+        let outputFileResponseModel = await file.outputJson(fileName, json);
         if(outputFileResponseModel.status){
-            core.info(outputFileResponseModel.message)
+            console.log(outputFileResponseModel.message)
         } else {
-            core.info(outputFileResponseModel.message)
+            console.log(outputFileResponseModel.message)
         }
     }
-    let read = async function (location) {
-        let fileName = getCountryName(location[0])
-        let path = `cache/${fileName}.json`;
-        let readFileResponseModel = await file.readJson(path);
+    let readCacheFile = async function (fileName) {
+        let readFileResponseModel = await file.readJson(fileName);
         if(readFileResponseModel.status){
-            return new ReadCacheResponseModel(
-                readFileResponseModel.status,
-                readFileResponseModel.content.login,
-                readFileResponseModel.content.name,
-                readFileResponseModel.content.avatarUrl,
-                readFileResponseModel.content.location,
-                readFileResponseModel.content.followers,
-                readFileResponseModel.content.privateContributions,
-                readFileResponseModel.content.publicContributions)
+            return new ReadCacheResponseModel(readFileResponseModel.status, readFileResponseModel.content)
         } else {
             return new ReadCacheResponseModel(readFileResponseModel.status)
         }
     }
     return {
-        save: save,
-        read: read
+        outputCacheFile: outputCacheFile,
+        readCacheFile: readCacheFile
     };
 })();
-module.exports = outputCache;
+module.exports = cacheFile;
 
 
 /***/ }),
@@ -13021,15 +13033,14 @@ module.exports = configFile;
 /***/ 2025:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2186);
 const file = __nccwpck_require__(6990);
 let markdownFile = (function () {
     let outputMarkdownFile = async function (fileName, markdown) {
         let outputFileResponseModel = await file.outputOther(fileName, markdown);
         if(outputFileResponseModel.status){
-            core.info(outputFileResponseModel.message)
+            console.log(outputFileResponseModel.message)
         } else {
-            core.info(outputFileResponseModel.message)
+            console.log(outputFileResponseModel.message)
         }
     }
     return {
@@ -13111,34 +13122,119 @@ module.exports = pushGit;
 
 /***/ }),
 
+/***/ 190:
+/***/ ((module) => {
+
+let createMarkdown = (function () {
+    function capitalizeTheFirstLetterOfEachWord(words) {
+        let separateWord = words.toLowerCase().split(' ');
+        for (let i = 0; i < separateWord.length; i++) {
+            separateWord[i] = separateWord[i].charAt(0).toUpperCase() +
+                separateWord[i].substring(1);
+        }
+        return separateWord.join(' ');
+    }
+    let getDate = function () {
+        let date = new Date();
+        let time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${time}`
+    }
+    let createTable = function (readCacheResponseModel) {
+        let users = readCacheResponseModel.users;
+        let index = 1;
+        users.sort((a, b) => parseFloat(b.publicContributions) - parseFloat(a.publicContributions));
+        let row = `| # |  Name | Followers | Location | Public Contributions |\n| ---- | ---- | ---- | ---- | ---- |\n`;
+        for (const user of readCacheResponseModel.users) {
+            row = row + `| ${index} | [<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.name}](https://github.com/${user.login}) <sub>(${user.login})</sub> | \`${user.followers}\` | ${user.location} | ${user.publicContributions} |\n`;
+            index++;
+        }
+        return row;
+    }
+    let createMarkdownList = function (locationDataModel, readCacheResponseModel) {
+        let markdown = `# Most active GitHub users in {headerCountry}\n\n` +
+            `<img align="right" width="200" src="{imageUrl}">\n\n` +
+            `The public contributions to public repos by users in {descriptionCountry} on \`{date}\`. This list contains ` +
+            `users from \`Sri Lanka\` and cities \`Colombo\`, \`Gampaha\`.\n\n` +
+            `There are \`12 countries\` can be found [here](index.html).\n\n` +
+            `There are \`1140\` users in Sri Lanka. You need at least 0 followers to be on this list.\n\n` +
+            `| \`Public Contributions\` | [Private Contributions](https://github.com/gayanvoice/javascript-action/edit/master/README.md)  | [Total Contributions](https://github.com/gayanvoice/javascript-action/edit/master/README.md)  |\n` +
+            `| ---- | ---- | ---- |\n\n` +
+            `{table}\n\n`;
+        markdown = markdown.replace(`{headerCountry}`, capitalizeTheFirstLetterOfEachWord(locationDataModel.country));
+        markdown = markdown.replace(`{descriptionCountry}`, capitalizeTheFirstLetterOfEachWord(locationDataModel.country));
+        markdown = markdown.replace(`{imageUrl}`, locationDataModel.imageUrl);
+        markdown = markdown.replace(`{table}`, createTable(readCacheResponseModel));
+        markdown = markdown.replace(`{date}`, getDate());
+        return markdown;
+    }
+    return {
+        createMarkdownList: createMarkdownList,
+    };
+})();
+module.exports = createMarkdown;
+
+
+/***/ }),
+
+/***/ 8167:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const markdownFile = __nccwpck_require__(2025);
+let outputMarkdown = (function () {
+    let setCountryName = function (country) {
+        return country.replace(' ', '_').toLowerCase();
+    }
+    let setPath = function (country) {
+        let fileName = setCountryName(country)
+        return `markdown/${fileName}.md`;
+    }
+    let saveMarkdownFile = async function (country, markdown) {
+        await markdownFile.outputMarkdownFile(setPath(country), markdown);
+    }
+    return {
+        saveMarkdownFile: saveMarkdownFile,
+    };
+})();
+module.exports = outputMarkdown;
+
+
+/***/ }),
+
 /***/ 639:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2186);
 const octokit = __nccwpck_require__(3006);
 let requestOctokit = function () {
+    let setLocation = function (place) {
+        return place.replace(' ', '_').toLowerCase();
+    }
     let setQuery = function (location) {
         let query = '';
         for (const place of location) {
-            query = query + `location:${place} `;
+            query = query + `location:${setLocation(place)} `;
         }
         return query;
     }
     let request = async function (location) {
-        console.log(setQuery(location))
         let hasNextPage = true;
         let cursor = null;
         let array = [];
+        let iterations = 0;
+        let errors = 0;
         for (; hasNextPage;) {
             let octokitResponseModel = await octokit.request(setQuery(location), cursor);
             if(octokitResponseModel.status){
                 hasNextPage = octokitResponseModel.pageInfo.hasNextPage;
                 cursor = octokitResponseModel.pageInfo.endCursor;
-                for(const user of octokitResponseModel.node){
-                    console.log(user.login)
-                    array.push(user)
+                for(const userDataModel of octokitResponseModel.node){
+                    console.log(userDataModel.login, userDataModel.followers)
+                    if(userDataModel.followers > 0 && userDataModel.publicContributions >= 0) array.push(userDataModel)
                 }
+                iterations ++;
+            } else {
+                errors ++;
             }
+            if(iterations >= 50 || errors >= 2) hasNextPage = false;
         }
         return array;
     }
@@ -13158,25 +13254,31 @@ const commitGit = __nccwpck_require__(6763);
 const pushGit = __nccwpck_require__(6278);
 const configFile = __nccwpck_require__(6264);
 const outputCache = __nccwpck_require__(9862);
-const outputMarkdown = __nccwpck_require__(2025);
+const outputMarkdown = __nccwpck_require__(8167);
+const createMarkdown = __nccwpck_require__(190);
 const requestOctokit = __nccwpck_require__(639);
 let Index = function () {
-    let saveCache = async function (locations) {
-        for await(const location of locations){
-            let json = await requestOctokit.request(location);
-            await outputCache.save(location, json);
+    let saveCache = async function (readConfigResponseModel) {
+        for await(const locationDataModel of readConfigResponseModel.locations){
+            let json = await requestOctokit.request(locationDataModel.locations);
+            await outputCache.saveCacheFile(locationDataModel.country, json);
         }
     }
-    let saveMarkdown = async function (locations) {
-        for await(const location of locations){
-            let readCacheResponseModel =  await outputCache.read(location);
+    let saveMarkdown = async function (readConfigResponseModel) {
+        for await(const locationDataModel of readConfigResponseModel.locations){
+            let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
+            if(readCacheResponseModel.status) {
+                let listMarkdown = createMarkdown.createMarkdownList(locationDataModel, readCacheResponseModel)
+                await outputMarkdown.saveMarkdownFile(locationDataModel.country, listMarkdown)
+            }
         }
     }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
         if(readConfigResponseModel.status){
             if(!readConfigResponseModel.devMode) await pullGit.pull();
-            await saveCache(readConfigResponseModel.locations);
+            await saveCache(readConfigResponseModel);
+            await saveMarkdown(readConfigResponseModel)
             if(!readConfigResponseModel.devMode){
                 await commitGit.commit("Update users");
                 await pushGit.push();
@@ -13192,16 +13294,10 @@ Index.main().then(() => { });
 /***/ }),
 
 /***/ 128:
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-let ReadCacheResponseModel = function (status,
-                                       login,
-                                       name,
-                                       avatarUrl,
-                                       location,
-                                       followers,
-                                       publicContributions,
-                                       privateContributions) {
+const UserDataModel = __nccwpck_require__(1689);
+let ReadCacheResponseModel = function (status, content) {
     let validate = function (value) {
         return (value === '' || value === null || value === undefined);
     }
@@ -13212,22 +13308,32 @@ let ReadCacheResponseModel = function (status,
             return value;
         }
     }
+    let setUsers = function (content) {
+        let array = [];
+        for(const user of content){
+            let userDataModel = new UserDataModel(
+                setValue(user.login),
+                setValue(user.name),
+                setValue(user.avatarUrl),
+                setValue(user.location),
+                setValue(user.followers),
+                setValue(user.privateContributions),
+                setValue(user.publicContributions))
+            array.push(userDataModel)
+        }
+        return array;
+    }
     this.status = status;
-    if (status) this.login = setValue(login);
-    if (status) this.name = setValue(name);
-    if (status) this.avatarUrl = setValue(avatarUrl);
-    if (status) this.location = setValue(location);
-    if (status) this.followers = setValue(followers);
-    if (status) this.privateContributions = setValue(privateContributions);
-    if (status) this.publicContributions = setValue(publicContributions);
+    if (status) this.users = setUsers(content)
 }
 module.exports = ReadCacheResponseModel;
 
 /***/ }),
 
 /***/ 3317:
-/***/ ((module) => {
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+const LocationDataModel = __nccwpck_require__(9827);
 let ReadConfigResponseModel =  function (status, content) {
     let validate = function (value) {
         return !(value === '' || value === null || value === undefined || (typeof value) !== 'string');
@@ -13243,6 +13349,7 @@ let ReadConfigResponseModel =  function (status, content) {
         let locationArray = [];
         for (const location of locations) {
             let country = location.country;
+            let imageUrl = location.imageUrl;
             if(validate(country)) {
                 let array = [];
                 array.push(country)
@@ -13251,7 +13358,7 @@ let ReadConfigResponseModel =  function (status, content) {
                         array.push(city)
                     }
                 }
-                locationArray.push(array)
+                locationArray.push(new LocationDataModel(country, array, imageUrl))
             }
         }
         return locationArray;
@@ -13261,6 +13368,44 @@ let ReadConfigResponseModel =  function (status, content) {
     if(status) this.locations = setLocations(content.locations);
 }
 module.exports = ReadConfigResponseModel;
+
+/***/ }),
+
+/***/ 9827:
+/***/ ((module) => {
+
+let LocationDataModel = function (
+    country,
+    locations,
+    imageUrl) {
+    this.country = country;
+    this.locations = locations;
+    this.imageUrl = imageUrl;
+}
+module.exports = LocationDataModel;
+
+/***/ }),
+
+/***/ 1689:
+/***/ ((module) => {
+
+let UserDataModel = function (
+    login,
+    name,
+    avatarUrl,
+    location,
+    followers,
+    privateContributions,
+    publicContributions) {
+    this.login = login;
+    this.name = name;
+    this.avatarUrl = avatarUrl;
+    this.location = location;
+    this.followers = followers;
+    this.privateContributions = privateContributions;
+    this.publicContributions = publicContributions;
+}
+module.exports = UserDataModel;
 
 /***/ }),
 
@@ -13286,27 +13431,6 @@ module.exports = ReadFileResponseModel;
 
 /***/ }),
 
-/***/ 9617:
-/***/ ((module) => {
-
-let OctokitNodeModel =  function (node) {
-    let setPublicContributions = function (contributionsCollection) {
-        let totalContributions = contributionsCollection.contributionCalendar.totalContributions;
-        let privateContributions = contributionsCollection.restrictedContributionsCount;
-        return totalContributions - privateContributions;
-    }
-    this.login = node.login;
-    this.name = node.name;
-    this.avatarUrl = node.avatarUrl;
-    this.location = node.location;
-    this.followers = node.followers.totalCount;
-    this.privateContributions = node.contributionsCollection.restrictedContributionsCount;
-    this.publicContributions = setPublicContributions(node.contributionsCollection);
-}
-module.exports = OctokitNodeModel;
-
-/***/ }),
-
 /***/ 8917:
 /***/ ((module) => {
 
@@ -13322,19 +13446,42 @@ module.exports = OctokitPageInfoModel;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const OctokitPageInfoModel = __nccwpck_require__(8917);
-const OctokitNodeModel = __nccwpck_require__(9617);
+const UserDataModel = __nccwpck_require__(1689);
 let OctokitResponseModel =  function (status, response) {
-    let setNodes = function (edges) {
+    let validate = function (value) {
+        return (value === '' || value === null || value === undefined);
+    }
+    let setValue = function (value) {
+        if (validate(value)) {
+            return "undefined value";
+        } else {
+            return value;
+        }
+    }
+    let setPublicContributions = function (contributionsCollection) {
+        let totalContributions = contributionsCollection.contributionCalendar.totalContributions;
+        let privateContributions = contributionsCollection.restrictedContributionsCount;
+        return totalContributions - privateContributions;
+    }
+    let setUsers = function (edges) {
         let array = [];
         for (const node of edges) {
             if(node.node.__typename === 'User'){
-                array.push(new OctokitNodeModel(node.node));
+                let userDataModel = new UserDataModel(
+                    setValue(node.node.login),
+                    setValue(node.node.name),
+                    setValue(node.node.avatarUrl),
+                    setValue(node.node.location),
+                    setValue(node.node.followers.totalCount),
+                    setValue(node.node.contributionsCollection.restrictedContributionsCount),
+                    setValue(setPublicContributions(node.node.contributionsCollection)))
+                array.push(userDataModel)
             }
         }
         return array;
     }
     this.status = status;
-    if (status) this.node = setNodes(response.search.edges);
+    if (status) this.node = setUsers(response.search.edges);
     if (status) this.pageInfo = new OctokitPageInfoModel(response.search.pageInfo);
 }
 module.exports = OctokitResponseModel;

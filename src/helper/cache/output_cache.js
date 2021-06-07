@@ -1,41 +1,21 @@
-const core = require('@actions/core');
-const file = require('../../core/file');
-const ReadCacheResponseModel = require('../../model/cache/ReadCacheResponseModel');
+const cacheFile = require('../../helper/file/cache_file');
 let outputCache = (function () {
     let getCountryName = function (country) {
         return country.replace(' ', '_').toLowerCase();
     }
-    let save = async function (location, json) {
-        let fileName = getCountryName(location[0])
-        let path = `cache/${fileName}.json`;
-        let outputFileResponseModel = await file.outputJson(path, json);
-        if(outputFileResponseModel.status){
-            core.info(outputFileResponseModel.message)
-        } else {
-            core.info(outputFileResponseModel.message)
-        }
+    let getPath = function (country) {
+        let fileName = getCountryName(country)
+        return `cache/${fileName}.json`;
     }
-    let read = async function (location) {
-        let fileName = getCountryName(location[0])
-        let path = `cache/${fileName}.json`;
-        let readFileResponseModel = await file.readJson(path);
-        if(readFileResponseModel.status){
-            return new ReadCacheResponseModel(
-                readFileResponseModel.status,
-                readFileResponseModel.content.login,
-                readFileResponseModel.content.name,
-                readFileResponseModel.content.avatarUrl,
-                readFileResponseModel.content.location,
-                readFileResponseModel.content.followers,
-                readFileResponseModel.content.privateContributions,
-                readFileResponseModel.content.publicContributions)
-        } else {
-            return new ReadCacheResponseModel(readFileResponseModel.status)
-        }
+    let saveCacheFile = async function (country, json) {
+        await cacheFile.outputCacheFile(getPath(country), json);
+    }
+    let readCacheFile = async function (country) {
+        return await cacheFile.readCacheFile(getPath(country));
     }
     return {
-        save: save,
-        read: read
+        saveCacheFile: saveCacheFile,
+        readCacheFile: readCacheFile
     };
 })();
 module.exports = outputCache;

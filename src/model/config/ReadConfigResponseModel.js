@@ -1,3 +1,4 @@
+const LocationDataModel = require('../data/LocationDataModel');
 let ReadConfigResponseModel =  function (status, content) {
     let validate = function (value) {
         return !(value === '' || value === null || value === undefined || (typeof value) !== 'string');
@@ -13,6 +14,7 @@ let ReadConfigResponseModel =  function (status, content) {
         let locationArray = [];
         for (const location of locations) {
             let country = location.country;
+            let imageUrl = location.imageUrl;
             if(validate(country)) {
                 let array = [];
                 array.push(country)
@@ -21,7 +23,7 @@ let ReadConfigResponseModel =  function (status, content) {
                         array.push(city)
                     }
                 }
-                locationArray.push(array)
+                locationArray.push(new LocationDataModel(country, array, imageUrl))
             }
         }
         return locationArray;
