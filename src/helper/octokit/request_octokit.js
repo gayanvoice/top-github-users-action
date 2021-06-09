@@ -1,7 +1,5 @@
 const octokit = require('../../core/octokit');
 let requestOctokit = function () {
-    const MAXIMUM_ITERATIONS = 100;
-    const MAXIMUM_ERROR_ITERATIONS = 10;
     let setLocation = function (place) {
         return place.replace(' ', '_').toLowerCase();
     }
@@ -12,14 +10,17 @@ let requestOctokit = function () {
         }
         return query;
     }
-    let request = async function (location) {
+    let request = async function (AUTH_KEY,
+                                  MAXIMUM_ITERATIONS,
+                                  MAXIMUM_ERROR_ITERATIONS,
+                                  location) {
         let hasNextPage = true;
         let cursor = null;
         let array = [];
         let iterations = 0;
         let errors = 0;
         for (; hasNextPage;) {
-            let octokitResponseModel = await octokit.request(setQuery(location), cursor);
+            let octokitResponseModel = await octokit.request(AUTH_KEY, setQuery(location), cursor);
             if(octokitResponseModel.status){
                 hasNextPage = octokitResponseModel.pageInfo.hasNextPage;
                 cursor = octokitResponseModel.pageInfo.endCursor;

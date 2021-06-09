@@ -10,6 +10,12 @@ const createTotalContributionsMarkdown = require('./helper/markdown/create_total
 const createFollowersMarkdown = require('./helper/markdown/create_followers_markdown');
 const requestOctokit = require('./helper/octokit/request_octokit');
 let Index = function () {
+    // const AUTH_KEY = "";
+    // const GITHUB_REPOSITORY = 'gayanvoice/github-active-users';
+    const AUTH_KEY = process.env.CUSTOM_TOKEN;
+    const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
+    const MAXIMUM_ITERATIONS = 200;
+    const MAXIMUM_ERROR_ITERATIONS = 10;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
         return indexOfTheCountry === checkpoint;
@@ -30,7 +36,11 @@ let Index = function () {
                 locationDataModel.country,
                 readCheckpointResponseModel.checkpoint)){
                 console.log("checkpoint set", locationDataModel.country)
-                let json = await requestOctokit.request(locationDataModel.locations);
+                let json = await requestOctokit.request(
+                    AUTH_KEY,
+                    MAXIMUM_ITERATIONS,
+                    MAXIMUM_ERROR_ITERATIONS,
+                    locationDataModel.locations);
                 await outputCache.saveCacheFile(locationDataModel.country, json);
             } else {
                 console.log("checkpoint not set", locationDataModel.country)
@@ -39,26 +49,41 @@ let Index = function () {
         }
     }
     let saveMarkdown = async function (readConfigResponseModel, readCheckpointResponseModel) {
-        let locationsArray = readConfigResponseModel.locations;
-        let checkpoint = readCheckpointResponseModel.checkpoint;
         for await(const locationDataModel of readConfigResponseModel.locations){
-            let countryName = locationDataModel.country;
-            if(await getCountryAndUpdateCheckpoint(locationsArray, countryName, checkpoint)){
-                let readCacheResponseModel =  await outputCache.readCacheFile(countryName);
-                console.log("checkpoint set", countryName)
+            if(await getCountryAndUpdateCheckpoint(
+                readConfigResponseModel.locations,
+                locationDataModel.country,
+                readCheckpointResponseModel.checkpoint)){
+                let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
+                console.log("checkpoint set", locationDataModel.country)
                 if(readCacheResponseModel.status) {
-                    console.log("cache file exists", countryName)
-                    await outputMarkdown.savePublicContributionsMarkdownFile(countryName,
-                        createPublicContributionsMarkdown.create(locationDataModel, readCacheResponseModel, readConfigResponseModel));
-                    await outputMarkdown.saveTotalContributionsMarkdownFile(countryName,
-                        createTotalContributionsMarkdown.create(locationDataModel, readCacheResponseModel, readConfigResponseModel));
-                    await outputMarkdown.saveFollowersMarkdownFile(countryName,
-                        createFollowersMarkdown.create(locationDataModel, readCacheResponseModel, readConfigResponseModel))
+                    console.log("cache file exists", locationDataModel.country)
+                    await outputMarkdown.savePublicContributionsMarkdownFile(
+                        locationDataModel.country,
+                        createPublicContributionsMarkdown.create(
+                            GITHUB_REPOSITORY,
+                            locationDataModel,
+                            readCacheResponseModel,
+                            readConfigResponseModel));
+                    await outputMarkdown.saveTotalContributionsMarkdownFile(
+                        locationDataModel.country,
+                        createTotalContributionsMarkdown.create(
+                            GITHUB_REPOSITORY,
+                            locationDataModel,
+                            readCacheResponseModel,
+                            readConfigResponseModel));
+                    await outputMarkdown.saveFollowersMarkdownFile(
+                        locationDataModel.country,
+                        createFollowersMarkdown.create(
+                            GITHUB_REPOSITORY,
+                            locationDataModel,
+                            readCacheResponseModel,
+                            readConfigResponseModel));
                 } else {
-                    console.log("cache file does not exist", countryName)
+                    console.log("cache file does not exist", locationDataModel.country)
                 }
             } else {
-                console.log("checkpoint not set", countryName)
+                console.log("checkpoint not set", locationDataModel.country)
             }
         }
     }

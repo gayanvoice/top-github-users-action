@@ -34,21 +34,24 @@ let createFollowersMarkdown = (function () {
         row = row + `</table>\n`;
         return row;
     }
-    let create = function (locationDataModel, readCacheResponseModel, readConfigResponseModel) {
+    let create = function (GITHUB_REPOSITORY, locationDataModel, readCacheResponseModel, readConfigResponseModel) {
         let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country);
+        let indexUrl  = `https://github.com/${GITHUB_REPOSITORY}`
+        let publicContributionsUrl  = `${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
+        let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
         let markdown = `# Top GitHub Users By Followers in ${country}\n\n`;
         markdown = markdown + `<img align="right" width="200" src="${locationDataModel.imageUrl}" alt="${country}">\n\n`;
         markdown = markdown + `The number of followers of each user in ${country} on \`${formatMarkdown.getDate()}\`. `;
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(locationDataModel)}.\n\n`;
-        markdown = markdown + `There are \`${readConfigResponseModel.locations.length} countries\` can be found [here](index.html).\n\n`;
+        markdown = markdown + `There are \`${readConfigResponseModel.locations.length} countries\` can be found [here](${indexUrl}).\n\n`;
         markdown = markdown + `There are \`${readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(readCacheResponseModel)} followers\` to be on this list.\n\n`;
         markdown = markdown + `<table>\n`;
         markdown = markdown + `\t<tr>\n`;
         markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<a href="#">Top Users By Public Contributions</a>\n`;
+        markdown = markdown + `\t\t\t<a href="${publicContributionsUrl}">Top Users By Public Contributions</a>\n`;
         markdown = markdown + `\t\t</td>\n`;
         markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<a href="#">Top Users By Total Contributions</a>\n`;
+        markdown = markdown + `\t\t\t<a href="${totalContributionsUrl}">Top Users By Total Contributions</a>\n`;
         markdown = markdown + `\t\t</td>\n`;
         markdown = markdown + `\t\t<td>\n`;
         markdown = markdown + `\t\t\t<strong>Top Users By Followers</strong>\n`;

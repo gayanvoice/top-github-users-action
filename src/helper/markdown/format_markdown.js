@@ -65,6 +65,9 @@ let formatMarkdown = function () {
         users.sort((a, b) => parseFloat(b.followers) - parseFloat(a.followers));
         return users[users.length - 1].followers;
     }
+    let getCountryName = function (country) {
+        return country.replace(' ', '_').toLowerCase();
+    }
     return {
         capitalizeTheFirstLetterOfEachWord: capitalizeTheFirstLetterOfEachWord,
         breakWords: breakWords,
@@ -73,7 +76,8 @@ let formatMarkdown = function () {
         getName: getName,
         getTwitterUsername: getTwitterUsername,
         getLocations: getLocations,
-        getMinimumFollowersRequirement: getMinimumFollowersRequirement
+        getMinimumFollowersRequirement: getMinimumFollowersRequirement,
+        getCountryName: getCountryName
 
     };
 }();
