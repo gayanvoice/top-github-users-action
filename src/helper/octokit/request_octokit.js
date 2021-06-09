@@ -10,6 +10,10 @@ let requestOctokit = function () {
         }
         return query;
     }
+    const setDelay = function(timeout){
+        console.log(`delay seconds ${timeout}`)
+        return new Promise(res => setTimeout(res, timeout));
+    }
     let request = async function (AUTH_KEY,
                                   MAXIMUM_ITERATIONS,
                                   MAXIMUM_ERROR_ITERATIONS,
@@ -28,8 +32,10 @@ let requestOctokit = function () {
                     console.log(userDataModel.login, userDataModel.followers)
                     array.push(userDataModel)
                 }
+                await setDelay(5000);
                 iterations ++;
             } else {
+                await setDelay(60000);
                 errors ++;
             }
             if(iterations >= MAXIMUM_ITERATIONS || errors >= MAXIMUM_ERROR_ITERATIONS) hasNextPage = false;
