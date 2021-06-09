@@ -1,4 +1,5 @@
-const {graphql} = require("@octokit/graphql");
+const { graphql } = require("@octokit/graphql");
+const { Octokit } = require("@octokit/rest");
 const OctokitResponseModel = require('../model/octokit/OctokitResponseModel');
 let octokit = (function () {
     // const AUTH_KEY = "";
@@ -21,6 +22,8 @@ let octokit = (function () {
                       avatarUrl(size: 72),
                       name,
                       location,
+                      company,
+                      twitterUsername,
                       followers {
                         totalCount
                       }

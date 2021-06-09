@@ -18,6 +18,8 @@ let ReadCacheResponseModel = function (status, content) {
                 setValue(user.name),
                 setValue(user.avatarUrl),
                 setValue(user.location),
+                setValue(user.company),
+                setValue(user.twitterUsername),
                 setValue(user.followers),
                 setValue(user.privateContributions),
                 setValue(user.publicContributions))

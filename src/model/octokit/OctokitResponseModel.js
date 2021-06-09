@@ -25,6 +25,8 @@ let OctokitResponseModel =  function (status, response) {
                     setValue(node.node.name),
                     setValue(node.node.avatarUrl),
                     setValue(node.node.location),
+                    setValue(node.node.company),
+                    setValue(node.node.twitterUsername),
                     setValue(node.node.followers.totalCount),
                     setValue(node.node.contributionsCollection.restrictedContributionsCount),
                     setValue(setPublicContributions(node.node.contributionsCollection)))

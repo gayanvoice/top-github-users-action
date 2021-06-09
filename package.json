@@ -25,6 +25,7 @@
   "dependencies": {
     "@actions/core": "1.2.5",
     "@octokit/graphql": "4.6.2",
+    "@octokit/rest": "^18.5.6",
     "fs-extra": "9.1.0",
     "simple-git": "2.39.0"
   },

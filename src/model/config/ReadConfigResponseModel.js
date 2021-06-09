@@ -31,5 +31,6 @@ let ReadConfigResponseModel =  function (status, content) {
     this.status = status;
     if(status) this.devMode = setDevMode(content.devMode);
     if(status) this.locations = setLocations(content.locations);
+    if(status) this.checkpoint = content.checkpoint;
 }
 module.exports = ReadConfigResponseModel;

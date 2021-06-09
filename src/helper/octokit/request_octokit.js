@@ -1,5 +1,7 @@
 const octokit = require('../../core/octokit');
 let requestOctokit = function () {
+    const MAXIMUM_ITERATIONS = 100;
+    const MAXIMUM_ERROR_ITERATIONS = 10;
     let setLocation = function (place) {
         return place.replace(' ', '_').toLowerCase();
     }
@@ -23,13 +25,13 @@ let requestOctokit = function () {
                 cursor = octokitResponseModel.pageInfo.endCursor;
                 for(const userDataModel of octokitResponseModel.node){
                     console.log(userDataModel.login, userDataModel.followers)
-                    if(userDataModel.followers > 0 && userDataModel.publicContributions >= 0) array.push(userDataModel)
+                    array.push(userDataModel)
                 }
                 iterations ++;
             } else {
                 errors ++;
             }
-            if(iterations >= 50 || errors >= 2) hasNextPage = false;
+            if(iterations >= MAXIMUM_ITERATIONS || errors >= MAXIMUM_ERROR_ITERATIONS) hasNextPage = false;
         }
         return array;
     }
