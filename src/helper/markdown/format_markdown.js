@@ -24,8 +24,8 @@ let formatMarkdown = function () {
     }
     let getDate = function () {
         let date = new Date();
-        let time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
-        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${time}`
+        let time = date.toLocaleString('en-US', { timeZone: 'UTC', hour: 'numeric', minute: 'numeric', hour12: true })
+        return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${time} UTC`
     }
     let getCompany = function (company) {
         if(company === 'undefined value'){

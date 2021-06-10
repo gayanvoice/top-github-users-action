@@ -5,13 +5,14 @@ const configFile = require('./helper/file/config_file');
 const outputCheckpoint = require('./helper/checkpoint/output_checkpoint');
 const outputCache = require('./helper/cache/output_cache');
 const outputMarkdown = require('./helper/markdown/output_markdown');
+const createIndexMarkdown = require('./helper/markdown/create_index_markdown');
 const createPublicContributionsMarkdown = require('./helper/markdown/create_public_contributions_markdown');
 const createTotalContributionsMarkdown = require('./helper/markdown/create_total_contributions_markdown');
 const createFollowersMarkdown = require('./helper/markdown/create_followers_markdown');
 const requestOctokit = require('./helper/octokit/request_octokit');
 let Index = function () {
     // const AUTH_KEY = "";
-    // const GITHUB_REPOSITORY = 'gayanvoice/github-active-users';
+    // const GITHUB_REPOSITORY = 'github-commits-top';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
     const MAXIMUM_ITERATIONS = 100;
@@ -49,6 +50,7 @@ let Index = function () {
         }
     }
     let saveMarkdown = async function (readConfigResponseModel, readCheckpointResponseModel) {
+        await outputMarkdown.saveIndexMarkdownFile(createIndexMarkdown.create(GITHUB_REPOSITORY, readConfigResponseModel));
         for await(const locationDataModel of readConfigResponseModel.locations){
             if(await getCountryAndUpdateCheckpoint(
                 readConfigResponseModel.locations,
@@ -92,7 +94,7 @@ let Index = function () {
         let readCheckpointResponseModel = await outputCheckpoint.readCheckpointFile();
         if(readConfigResponseModel.status && readCheckpointResponseModel.status){
             if(!readConfigResponseModel.devMode) await pullGit.pull();
-            await saveCache(readConfigResponseModel, readCheckpointResponseModel);
+            // await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
             if(!readConfigResponseModel.devMode){
                 await commitGit.commit("Update users");

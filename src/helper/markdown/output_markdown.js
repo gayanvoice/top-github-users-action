@@ -3,6 +3,9 @@ let outputMarkdown = (function () {
     let setCountryName = function (country) {
         return country.replace(' ', '_').toLowerCase();
     }
+    let setIndexPath = function () {
+        return `README.md`;
+    }
     let setPublicContributionsPath = function (country) {
         let fileName = setCountryName(country)
         return `markdown/public_contributions/${fileName}.md`;
@@ -15,6 +18,9 @@ let outputMarkdown = (function () {
         let fileName = setCountryName(country)
         return `markdown/followers/${fileName}.md`;
     }
+    let saveIndexMarkdownFile = async function (markdown) {
+        await markdownFile.outputMarkdownFile(setIndexPath(), markdown);
+    }
     let savePublicContributionsMarkdownFile = async function (country, markdown) {
         await markdownFile.outputMarkdownFile(setPublicContributionsPath(country), markdown);
     }
@@ -25,6 +31,7 @@ let outputMarkdown = (function () {
         await markdownFile.outputMarkdownFile(setFollowersPath(country), markdown);
     }
     return {
+        saveIndexMarkdownFile: saveIndexMarkdownFile,
         savePublicContributionsMarkdownFile: savePublicContributionsMarkdownFile,
         saveTotalContributionsMarkdownFile: saveTotalContributionsMarkdownFile,
         saveFollowersMarkdownFile: saveFollowersMarkdownFile,
