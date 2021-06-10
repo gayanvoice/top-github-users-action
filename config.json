@@ -3,6 +3,7 @@
   "locations":[
     { "country":  "sri lanka", "cities": ["colombo", "kandy", "gampaha", "galle", "jaffna", "matara"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" },
     { "country":  "india", "cities": ["delhi", "mumbai", "kolkata", "bangalore", "hyderabad", "chennai"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" },
+    { "country":  "india maharashtra", "cities": ["mumbai", "pune", "nagpur", "aurangabad", "thane", "amravati"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" },
     { "country":  "bangladesh", "cities": ["dhaka", "mymensingh", "rajshahi", "rangpur", "chittagong", "khulna"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" }
   ]
 }

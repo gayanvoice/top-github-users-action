@@ -13262,88 +13262,76 @@ module.exports = createFollowersMarkdown;
 
 const formatMarkdown = __nccwpck_require__(3164);
 let createIndexMarkdown = (function () {
-    let createTable = function (readCacheResponseModel) {
-        let users = readCacheResponseModel.users;
-        let index = 1;
-        users.sort((a, b) => parseFloat(b.followers) - parseFloat(a.followers));
-        let row = `<table>\n`;
-        row = row + `\t<tr>\n`;
-        row = row + `\t\t<th>#</th>\n`;
-        row = row + `\t\t<th>Name</th>\n`;
-        row = row + `\t\t<th>Company</th>\n`;
-        row = row + `\t\t<th>Twitter Username</th>\n`;
-        row = row + `\t\t<th>Location</th>\n`;
-        row = row + `\t\t<th>Followers</th>\n`;
-        row = row + `\t</tr>\n`;
-        for (const user of readCacheResponseModel.users) {
-            if(user.publicContributions > 0){
-                row = row + `\t<tr>\n`;
-                row = row + `\t\t<td>${index}</td>\n`;
-                row = row + `\t\t<td>\n`;
-                row = row + `\t\t\t<a href="https://github.com/${user.login}">\n`;
-                row = row + `\t\t\t\t<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.login}\n`;
-                row = row + `\t\t\t</a><br/>\n`;
-                row = row + `\t\t\t${formatMarkdown.getName(user.name)}\n`;
-                row = row + `\t\t</td>\n`;
-                row = row + `\t\t<td>${formatMarkdown.getCompany(user.company)}</td>\n`;
-                row = row + `\t\t<td>${formatMarkdown.getTwitterUsername(user.twitterUsername)}</td>\n`;
-                row = row + `\t\t<td>${user.location}</td>\n`;
-                row = row + `\t\t<td>${user.followers}</td>\n`;
-                row = row + `\t</tr>\n`;
+    let createListOfCities = function (locationDataModel) {
+        let cities = ``;
+        for(const location of locationDataModel.locations) {
+            if(locationDataModel.country !== location) {
+                cities = cities + `\t\t\t<code>${formatMarkdown.capitalizeTheFirstLetterOfEachWord(location)}</code> \n`;
             }
-            index++;
         }
-        row = row + `</table>\n`;
-        return row;
+        return cities;
     }
-    let saveIndex = async function (readConfigResponseModel) {
-        for await(const locationDataModel of readConfigResponseModel.locations){
-            console.log(locationDataModel.country)
-            let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
-            if(readCacheResponseModel.status) {
-                let maxUserByPublicContributions = readCacheResponseModel.users.sort((a, b) => parseFloat(b.publicContributions) - parseFloat(a.publicContributions))[0];
-                let maxUserByTotalContributions = readCacheResponseModel.users.sort((a, b) => parseFloat(b.publicContributions) - parseFloat(a.publicContributions))[0];
-                console.log(maxUserByPublicContributions)
-            }
+    let createListOfCountriesAndCitiesTable = function (indexUrl, readConfigResponseModel) {
+        readConfigResponseModel.locations.sort((a,b) => a.country > b.country ? 1 : -1);
+        let table = `<table>\n`;
+        table = table + `\t<tr>\n`;
+        table = table + `\t\t<th>\n`;
+        table = table + `\t\t\tCountry/State\n`;
+        table = table + `\t\t</th>\n`;
+        table = table + `\t\t<th>\n`;
+        table = table + `\t\t\tCities\n`;
+        table = table + `\t\t</th>\n`;
+        table = table + `\t</tr>\n`;
+        for(const locationDataModel of readConfigResponseModel.locations) {
+            table = table + `\t<tr>\n`;
+            table = table + `\t\t<td>\n`;
+            table = table + `\t\t\t<a href="${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md">\n`;
+            table = table + `\t\t\t\t${formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country)}\n`;
+            table = table + `\t\t\t</a>\n`;
+            table = table + `\t\t</td>\n`;
+            table = table + `\t\t<td>\n`;
+            table = table + createListOfCities(locationDataModel);
+            table = table + `\t\t</td>\n`;
+            table = table + `\t</tr>\n`;
         }
+        table = table + `</table>\n\n`;
+        return table;
     }
     let createSocialMediaTable = function (title, description, url) {
-        let facebookPost = `sharer.php?u=${url}`;
-        let tweet = `tweet?text=${title} ${url}`;
-        let linkedInPost = `shareArticle?mini=true&url=${url}&title=${title}&summary=${description}&source=`;
+        let facebookPost = `sharer.php?t=${title}&u=${url}&_rdc=1&_rdr`;
+        let facebookMessengerPost = `send?link=${url}&app_id=291494419107518&redirect_uri=${url}`;
+        let twitterPost = `tweet?text=${title}&url=${url}`;
+        let whatsAppPost = `send?text=${title} ${url}`;
+        let telegramPost = `url?url=${url}&text=${title}`;
+        let linkedInPost = `shareArticle?title=${title}&url=${url}`;
         let email = `name?cc=cc&bcc=bcc&subject=subject&body=body`;
-        let redditPost = `submit?url=[post-url]&title=[post-title]`;
-        let tumblrPost = `link?url=[post-url]&name=[post-title]&description=[post-desc]`;
+        let redditPost = `submit?title=${title}&url=${url}`;
+        let tumblrPost = `share?t=${title}&u=${url}&v=3`;
         let socialMediaArray = [
             {
                 site: `Facebook`,
-                shareUrl: `https://www.facebook.com/sharer/${facebookPost}`,
+                shareUrl: `https://web.facebook.com/${facebookPost}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook.svg`,
             },
             {
                 site: `Facebook Messenger`,
-                shareUrl: `https://www.facebook.com/sharer/${facebookPost}`,
+                shareUrl: `https://www.facebook.com/dialog/${facebookMessengerPost}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook_messenger.svg`,
             },
             {
                 site: `Twitter`,
-                shareUrl: `https://twitter.com/intent/${tweet}`,
+                shareUrl: `https://twitter.com/intent/${twitterPost}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/twitter.svg`
             },
             {
                 site: `WhatsApp`,
-                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
+                shareUrl: `https://web.whatsapp.com/${whatsAppPost}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/whatsapp.svg`
             },
             {
                 site: `Telegram`,
-                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
+                shareUrl: `https://t.me/share/${telegramPost}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/telegram.svg`
-            },
-            {
-                site: `Viber`,
-                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/viber.svg`
             },
             {
                 site: `LinkedIn`,
@@ -13357,12 +13345,12 @@ let createIndexMarkdown = (function () {
             },
             {
                 site: `Reddit`,
-                shareUrl: `https://reddit.com/${redditPost}`,
+                shareUrl: `https://www.reddit.com/${redditPost}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/reddit.svg`,
             },
             {
                 site: `Tumblr`,
-                shareUrl: `https://www.tumblr.com/share/${tumblrPost}`,
+                shareUrl: `https://www.tumblr.com/${tumblrPost}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/tumblr.svg`,
             }
         ];
@@ -13376,7 +13364,7 @@ let createIndexMarkdown = (function () {
             table = table + `\t\t</td>\n`;
         }
         table = table + `\t</tr>\n`;
-        table = table + `</table>\n`;
+        table = table + `</table>\n\n`;
         return table;
     }
 
@@ -13384,7 +13372,7 @@ let createIndexMarkdown = (function () {
         let indexUrl  = `https://github.com/${GITHUB_REPOSITORY}`
         // let publicContributionsUrl  = `${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
         // let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let markdown = `# Top GitHub Users By Country\n\n`;
+        let markdown = `# 🔝 Top GitHub Users By Country\n\n`;
         markdown = markdown + `<img align="right" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" alt="Sri Lanka">\n\n`;
         markdown = markdown + `List of most active github users based on public contributions, and number of followers  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
@@ -13393,7 +13381,25 @@ let createIndexMarkdown = (function () {
         markdown = markdown + `The list can be found in [config.json](https://github.com/github-commits-top).\n\n`;
         markdown = markdown + `The project is maintained by [gayanvoice](github.com). `
         markdown = markdown + `Don't forget to follow him on [GitHub](github.com), [Twitter](twitter.com), and [Medium](medium.com).\n\n`;
-        markdown = markdown + `${createSocialMediaTable("Some Title", "Some Description", indexUrl)}\n\n`;
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + createSocialMediaTable(
+            encodeURI("Top GitHub Users By Country"),
+            encodeURI("List of most active github users based on public contributions, and number of followers by country or state"),
+            encodeURI(indexUrl));
+        markdown = markdown + createListOfCountriesAndCitiesTable(indexUrl, readConfigResponseModel);
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + createSocialMediaTable(
+            encodeURI("Top GitHub Users By Country"),
+            encodeURI("List of most active github users based on public contributions, and number of followers by country or state"),
+            encodeURI(indexUrl));
+        markdown = markdown + `## 📦 Third party\n\n`;
+        markdown = markdown + `- [@octokit/graphql](https://www.npmjs.com/package/@octokit/graphql) - Send GraphQL requests to GitHub API.\n`;
+        markdown = markdown + `- [fs-extra](https://www.npmjs.com/package/fs-extra) - Creating directories and files.\n`
+        markdown = markdown + `- [simple-git](https://www.npmjs.com/package/simple-git) - Handling Git commands.\n`
+        markdown = markdown + `## 📄 License\n\n`;
+        markdown = markdown + `- Repository: [gayanvoice/top-github-users-monitor](https://github.com/gayanvoice/top-github-users-monitor)\n`;
+        markdown = markdown + `- Template - [gayanvoice/${GITHUB_REPOSITORY}](${indexUrl})\n`;
+        markdown = markdown + `- Code: [MIT](./LICENSE) © [Gayan Kuruppu](https://github.com/gayanvoice)\n`;
         return markdown;
     }
     return {
@@ -13768,10 +13774,10 @@ const createFollowersMarkdown = __nccwpck_require__(7937);
 const requestOctokit = __nccwpck_require__(639);
 let Index = function () {
     // const AUTH_KEY = "";
-    // const GITHUB_REPOSITORY = 'github-commits-top';
+    // const GITHUB_REPOSITORY = 'gayanvoice/github-commits-top';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
-    const MAXIMUM_ITERATIONS = 2;
+    const MAXIMUM_ITERATIONS = 100;
     const MAXIMUM_ERROR_ITERATIONS = 10;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
@@ -13850,7 +13856,7 @@ let Index = function () {
         let readCheckpointResponseModel = await outputCheckpoint.readCheckpointFile();
         if(readConfigResponseModel.status && readCheckpointResponseModel.status){
             if(!readConfigResponseModel.devMode) await pullGit.pull();
-            // await saveCache(readConfigResponseModel, readCheckpointResponseModel);
+            await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
             if(!readConfigResponseModel.devMode){
                 await commitGit.commit("Update users");

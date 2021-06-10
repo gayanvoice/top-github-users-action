@@ -12,10 +12,10 @@ const createFollowersMarkdown = require('./helper/markdown/create_followers_mark
 const requestOctokit = require('./helper/octokit/request_octokit');
 let Index = function () {
     // const AUTH_KEY = "";
-    // const GITHUB_REPOSITORY = 'github-commits-top';
+    // const GITHUB_REPOSITORY = 'gayanvoice/github-commits-top';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
-    const MAXIMUM_ITERATIONS = 2;
+    const MAXIMUM_ITERATIONS = 100;
     const MAXIMUM_ERROR_ITERATIONS = 10;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
@@ -94,7 +94,7 @@ let Index = function () {
         let readCheckpointResponseModel = await outputCheckpoint.readCheckpointFile();
         if(readConfigResponseModel.status && readCheckpointResponseModel.status){
             if(!readConfigResponseModel.devMode) await pullGit.pull();
-            // await saveCache(readConfigResponseModel, readCheckpointResponseModel);
+            await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
             if(!readConfigResponseModel.devMode){
                 await commitGit.commit("Update users");
