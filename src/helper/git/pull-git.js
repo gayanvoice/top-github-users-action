@@ -1,12 +1,11 @@
-const core = require('@actions/core');
 const git = require('../../core/git');
 let pullGit = function () {
     let pull = async function () {
-        core.info(`Git Pull`)
+        console.log(`Git Pull`)
         try {
             await git.pull();
         } catch (error) {
-            core.info(error);
+            console.log(error);
         }
     }
     return {

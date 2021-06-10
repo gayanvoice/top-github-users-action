@@ -2,334 +2,6 @@ require('./sourcemap-register.js');module.exports =
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 7351:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const os = __importStar(__nccwpck_require__(2087));
-/**
- * Commands
- *
- * Command Format:
- *   ::name key=value,key=value::message
- *
- * Examples:
- *   ::warning::This is the message
- *   ::set-env name=MY_VAR::some value
- */
-function issueCommand(command, properties, message) {
-    const cmd = new Command(command, properties, message);
-    process.stdout.write(cmd.toString() + os.EOL);
-}
-exports.issueCommand = issueCommand;
-function issue(name, message = '') {
-    issueCommand(name, {}, message);
-}
-exports.issue = issue;
-const CMD_STRING = '::';
-class Command {
-    constructor(command, properties, message) {
-        if (!command) {
-            command = 'missing.command';
-        }
-        this.command = command;
-        this.properties = properties;
-        this.message = message;
-    }
-    toString() {
-        let cmdStr = CMD_STRING + this.command;
-        if (this.properties && Object.keys(this.properties).length > 0) {
-            cmdStr += ' ';
-            let first = true;
-            for (const key in this.properties) {
-                if (this.properties.hasOwnProperty(key)) {
-                    const val = this.properties[key];
-                    if (val) {
-                        if (first) {
-                            first = false;
-                        }
-                        else {
-                            cmdStr += ',';
-                        }
-                        cmdStr += `${key}=${escapeProperty(val)}`;
-                    }
-                }
-            }
-        }
-        cmdStr += `${CMD_STRING}${escapeData(this.message)}`;
-        return cmdStr;
-    }
-}
-/**
- * Sanitizes an input into a string so it can be passed into issueCommand safely
- * @param input input to sanitize into a string
- */
-function toCommandValue(input) {
-    if (input === null || input === undefined) {
-        return '';
-    }
-    else if (typeof input === 'string' || input instanceof String) {
-        return input;
-    }
-    return JSON.stringify(input);
-}
-exports.toCommandValue = toCommandValue;
-function escapeData(s) {
-    return toCommandValue(s)
-        .replace(/%/g, '%25')
-        .replace(/\r/g, '%0D')
-        .replace(/\n/g, '%0A');
-}
-function escapeProperty(s) {
-    return toCommandValue(s)
-        .replace(/%/g, '%25')
-        .replace(/\r/g, '%0D')
-        .replace(/\n/g, '%0A')
-        .replace(/:/g, '%3A')
-        .replace(/,/g, '%2C');
-}
-//# sourceMappingURL=command.js.map
-
-/***/ }),
-
-/***/ 2186:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
-    return result;
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-const command_1 = __nccwpck_require__(7351);
-const os = __importStar(__nccwpck_require__(2087));
-const path = __importStar(__nccwpck_require__(5622));
-/**
- * The code to exit an action
- */
-var ExitCode;
-(function (ExitCode) {
-    /**
-     * A code indicating that the action was successful
-     */
-    ExitCode[ExitCode["Success"] = 0] = "Success";
-    /**
-     * A code indicating that the action was a failure
-     */
-    ExitCode[ExitCode["Failure"] = 1] = "Failure";
-})(ExitCode = exports.ExitCode || (exports.ExitCode = {}));
-//-----------------------------------------------------------------------
-// Variables
-//-----------------------------------------------------------------------
-/**
- * Sets env variable for this action and future actions in the job
- * @param name the name of the variable to set
- * @param val the value of the variable. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function exportVariable(name, val) {
-    const convertedVal = command_1.toCommandValue(val);
-    process.env[name] = convertedVal;
-    command_1.issueCommand('set-env', { name }, convertedVal);
-}
-exports.exportVariable = exportVariable;
-/**
- * Registers a secret which will get masked from logs
- * @param secret value of the secret
- */
-function setSecret(secret) {
-    command_1.issueCommand('add-mask', {}, secret);
-}
-exports.setSecret = setSecret;
-/**
- * Prepends inputPath to the PATH (for this action and future actions)
- * @param inputPath
- */
-function addPath(inputPath) {
-    command_1.issueCommand('add-path', {}, inputPath);
-    process.env['PATH'] = `${inputPath}${path.delimiter}${process.env['PATH']}`;
-}
-exports.addPath = addPath;
-/**
- * Gets the value of an input.  The value is also trimmed.
- *
- * @param     name     name of the input to get
- * @param     options  optional. See InputOptions.
- * @returns   string
- */
-function getInput(name, options) {
-    const val = process.env[`INPUT_${name.replace(/ /g, '_').toUpperCase()}`] || '';
-    if (options && options.required && !val) {
-        throw new Error(`Input required and not supplied: ${name}`);
-    }
-    return val.trim();
-}
-exports.getInput = getInput;
-/**
- * Sets the value of an output.
- *
- * @param     name     name of the output to set
- * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function setOutput(name, value) {
-    command_1.issueCommand('set-output', { name }, value);
-}
-exports.setOutput = setOutput;
-/**
- * Enables or disables the echoing of commands into stdout for the rest of the step.
- * Echoing is disabled by default if ACTIONS_STEP_DEBUG is not set.
- *
- */
-function setCommandEcho(enabled) {
-    command_1.issue('echo', enabled ? 'on' : 'off');
-}
-exports.setCommandEcho = setCommandEcho;
-//-----------------------------------------------------------------------
-// Results
-//-----------------------------------------------------------------------
-/**
- * Sets the action status to failed.
- * When the action exits it will be with an exit code of 1
- * @param message add error issue message
- */
-function setFailed(message) {
-    process.exitCode = ExitCode.Failure;
-    error(message);
-}
-exports.setFailed = setFailed;
-//-----------------------------------------------------------------------
-// Logging Commands
-//-----------------------------------------------------------------------
-/**
- * Gets whether Actions Step Debug is on or not
- */
-function isDebug() {
-    return process.env['RUNNER_DEBUG'] === '1';
-}
-exports.isDebug = isDebug;
-/**
- * Writes debug message to user log
- * @param message debug message
- */
-function debug(message) {
-    command_1.issueCommand('debug', {}, message);
-}
-exports.debug = debug;
-/**
- * Adds an error issue
- * @param message error issue message. Errors will be converted to string via toString()
- */
-function error(message) {
-    command_1.issue('error', message instanceof Error ? message.toString() : message);
-}
-exports.error = error;
-/**
- * Adds an warning issue
- * @param message warning issue message. Errors will be converted to string via toString()
- */
-function warning(message) {
-    command_1.issue('warning', message instanceof Error ? message.toString() : message);
-}
-exports.warning = warning;
-/**
- * Writes info to log with console.log.
- * @param message info message
- */
-function info(message) {
-    process.stdout.write(message + os.EOL);
-}
-exports.info = info;
-/**
- * Begin an output group.
- *
- * Output until the next `groupEnd` will be foldable in this group
- *
- * @param name The name of the output group
- */
-function startGroup(name) {
-    command_1.issue('group', name);
-}
-exports.startGroup = startGroup;
-/**
- * End an output group.
- */
-function endGroup() {
-    command_1.issue('endgroup');
-}
-exports.endGroup = endGroup;
-/**
- * Wrap an asynchronous function call in a group.
- *
- * Returns the same type as the function itself.
- *
- * @param name The name of the group
- * @param fn The function to wrap in the group
- */
-function group(name, fn) {
-    return __awaiter(this, void 0, void 0, function* () {
-        startGroup(name);
-        let result;
-        try {
-            result = yield fn();
-        }
-        finally {
-            endGroup();
-        }
-        return result;
-    });
-}
-exports.group = group;
-//-----------------------------------------------------------------------
-// Wrapper action state
-//-----------------------------------------------------------------------
-/**
- * Saves state for current action, the state can only be retrieved by this action's post job execution.
- *
- * @param     name     name of the state to store
- * @param     value    value to store. Non-string values will be converted to a string via JSON.stringify
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function saveState(name, value) {
-    command_1.issueCommand('save-state', { name }, value);
-}
-exports.saveState = saveState;
-/**
- * Gets the value of an state set by this action's main execution.
- *
- * @param     name     name of the state to get
- * @returns   string
- */
-function getState(name) {
-    return process.env[`STATE_${name}`] || '';
-}
-exports.getState = getState;
-//# sourceMappingURL=core.js.map
-
-/***/ }),
-
 /***/ 4751:
 /***/ ((__unused_webpack_module, exports, __nccwpck_require__) => {
 
@@ -13115,17 +12787,16 @@ module.exports = markdownFile;
 /***/ 6763:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2186);
 const git = __nccwpck_require__(1193);
 let commitGit = function () {
     let INSIGHT_BOT_USERNAME = 'github-actions[bot]';
     let INSIGHT_BOT_EMAIL = '41898282+github-actions[bot]@users.noreply.github.com';
     let commit = async function (message) {
-        core.info(`Git Commit ${message}`)
+        console.log(`Git Commit ${message}`)
         try {
             await git.commit(INSIGHT_BOT_USERNAME, INSIGHT_BOT_EMAIL, message);
         } catch (error) {
-            core.info(error);
+            console.log(error);
         }
 
     }
@@ -13140,15 +12811,14 @@ module.exports = commitGit;
 /***/ 8591:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2186);
 const git = __nccwpck_require__(1193);
 let pullGit = function () {
     let pull = async function () {
-        core.info(`Git Pull`)
+        console.log(`Git Pull`)
         try {
             await git.pull();
         } catch (error) {
-            core.info(error);
+            console.log(error);
         }
     }
     return {
@@ -13162,16 +12832,15 @@ module.exports = pullGit;
 /***/ 6278:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const core = __nccwpck_require__(2186);
 const git = __nccwpck_require__(1193);
 let pushGit = function () {
     const BRANCH = 'main';
     let push = async function () {
-        core.info(`Git Push`);
+        console.log(`Git Push`);
         try {
             await git.push(BRANCH);
         } catch (error) {
-            core.info(error);
+            console.log(error);
         }
     }
     return {
@@ -13261,6 +12930,7 @@ module.exports = createFollowersMarkdown;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const formatMarkdown = __nccwpck_require__(3164);
+const socialMediaMarkdown = __nccwpck_require__(5501);
 let createIndexMarkdown = (function () {
     let createListOfCities = function (locationDataModel) {
         let cities = ``;
@@ -13270,6 +12940,17 @@ let createIndexMarkdown = (function () {
             }
         }
         return cities;
+    }
+    let getNumberOfCities = function (readConfigResponseModel) {
+        let numberOfCities = 0;
+        for(const locationDataModel of readConfigResponseModel.locations) {
+            for (const location of locationDataModel.locations) {
+                if (locationDataModel.country !== location) {
+                    numberOfCities++;
+                }
+            }
+        }
+        return numberOfCities;
     }
     let createListOfCountriesAndCitiesTable = function (indexUrl, readConfigResponseModel) {
         readConfigResponseModel.locations.sort((a,b) => a.country > b.country ? 1 : -1);
@@ -13297,113 +12978,30 @@ let createIndexMarkdown = (function () {
         table = table + `</table>\n\n`;
         return table;
     }
-    let createSocialMediaTable = function (title, description, url) {
-        let facebookPost = `sharer.php?t=${title}&u=${url}&_rdc=1&_rdr`;
-        let facebookMessengerPost = `send?link=${url}&app_id=291494419107518&redirect_uri=${url}`;
-        let twitterPost = `tweet?text=${title}&url=${url}`;
-        let whatsAppPost = `send?text=${title} ${url}`;
-        let telegramPost = `url?url=${url}&text=${title}`;
-        let linkedInPost = `shareArticle?title=${title}&url=${url}`;
-        let vkontaktePost = `share.php?url=${url}`;
-        let bloggerPost = `blog-this.g?n=${desription}&t=${title}&u=${url}`;
-        let wordpressPost = `press-this.php?u=${url}&t=${title}&s=${description}&i=`;
-        let email = `name?cc=cc&bcc=bcc&subject=${title}&body=${description}-${url}`;
-        let redditPost = `submit?title=${title}&url=${url}`;
-        let socialMediaArray = [
-            {
-                site: `Facebook`,
-                shareUrl: `https://web.facebook.com/${facebookPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook.svg`,
-            },
-            {
-                site: `Facebook Messenger`,
-                shareUrl: `https://www.facebook.com/dialog/${facebookMessengerPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook_messenger.svg`,
-            },
-            {
-                site: `Twitter`,
-                shareUrl: `https://twitter.com/intent/${twitterPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/twitter.svg`
-            },
-            {
-                site: `WhatsApp`,
-                shareUrl: `https://web.whatsapp.com/${whatsAppPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/whatsapp.svg`
-            },
-            {
-                site: `Telegram`,
-                shareUrl: `https://t.me/share/${telegramPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/telegram.svg`
-            },
-            {
-                site: `LinkedIn`,
-                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/linkedin.svg`
-            },
-            {
-                site: `Vkontakte`,
-                shareUrl: `https://vk.com/${vkontaktePost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/vkontakte.svg`,
-            },
-            {
-                site: `Blogger`,
-                shareUrl: `https://www.blogger.com/${bloggerPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/blogger.svg`,
-            },
-            {
-                site: `Wordpress`,
-                shareUrl: `https://wordpress.com/wp-admin/${wordpressPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/wordpress.svg`,
-            },
-            {
-                site: `Email`,
-                shareUrl: `mailto:recipient ${email}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/gmail.svg`
-            },
-            {
-                site: `Reddit`,
-                shareUrl: `https://www.reddit.com/${redditPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/reddit.svg`,
-            }
-        ];
-        let table = `<table>\n`;
-        table = table + `\t<tr>\n`;
-        for(const socialMedia of socialMediaArray){
-            table = table + `\t\t<td>\n`;
-            table = table + `\t\t\t<a href="${socialMedia.shareUrl}">\n`
-            table = table + `\t\t\t\t<img src="${socialMedia.iconUrl}" height="48" width="48" alt="${socialMedia.site}"/>\n`
-            table = table + `\t\t\t</a>\n`;
-            table = table + `\t\t</td>\n`;
-        }
-        table = table + `\t</tr>\n`;
-        table = table + `</table>\n\n`;
-        return table;
-    }
-
     let create = function (GITHUB_REPOSITORY, readConfigResponseModel) {
         let indexUrl  = `https://github.com/${GITHUB_REPOSITORY}`
         // let publicContributionsUrl  = `${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
         // let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
         let markdown = `# 🔝 Top GitHub Users By Country\n\n`;
         markdown = markdown + `<img align="right" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" alt="Sri Lanka">\n\n`;
-        markdown = markdown + `List of most active GitHub users based on public contributions, and number of followers  by country or state. `;
+        markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
-        markdown = markdown + `This repository contains users \`12 countries\` and \`300 cities\`. \n`;
+        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
         markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
         markdown = markdown + `The list can be found in [config.json](https://github.com/github-commits-top).\n\n`;
         markdown = markdown + `The project maintained by [gayanvoice](github.com). `
         markdown = markdown + `Don't forget to follow him on [GitHub](github.com), [Twitter](twitter.com), and [Medium](medium.com).\n\n`;
         markdown = markdown + `### 🚀 Share on\n\n`;
-        markdown = markdown + createSocialMediaTable(
-            encodeURI("Top GitHub Users By Country"),
-            encodeURI("List of most active github users based on public contributions, and number of followers by country or state"),
-            encodeURI(indexUrl));
+        markdown = markdown + socialMediaMarkdown.create(
+            "Top GitHub Users By Country",
+            "List of most active github users based on public contributions, and number of followers by country or state",
+            indexUrl);
         markdown = markdown + createListOfCountriesAndCitiesTable(indexUrl, readConfigResponseModel);
         markdown = markdown + `### 🚀 Share on\n\n`;
-        markdown = markdown + createSocialMediaTable(
-            encodeURI("Top GitHub Users By Country"),
-            encodeURI("List of most active github users based on public contributions, and number of followers by country or state"),
-            encodeURI(indexUrl));
+        markdown = markdown + socialMediaMarkdown.create(
+            "Top GitHub Users By Country",
+            "List of most active github users based on public contributions, and number of followers by country or state",
+            indexUrl);
         markdown = markdown + `## 📦 Third party\n\n`;
         markdown = markdown + `- [@octokit/graphql](https://www.npmjs.com/package/@octokit/graphql) - Send GraphQL requests to GitHub API.\n`;
         markdown = markdown + `- [fs-extra](https://www.npmjs.com/package/fs-extra) - Creating directories and files.\n`
@@ -13710,6 +13308,108 @@ let outputMarkdown = (function () {
     };
 })();
 module.exports = outputMarkdown;
+
+
+/***/ }),
+
+/***/ 5501:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const formatMarkdown = __nccwpck_require__(3164);
+let socialMediaMarkdown = (function () {
+    let createSocialMediaTable = function (title, description, url) {
+        let facebookPost = `sharer.php?t=${title}&u=${url}&_rdc=1&_rdr`;
+        let facebookMessengerPost = `send?link=${url}&app_id=291494419107518&redirect_uri=${url}`;
+        let twitterPost = `tweet?text=${title}&url=${url}`;
+        let whatsAppPost = `send?text=${title} ${url}`;
+        let telegramPost = `url?url=${url}&text=${title}`;
+        let linkedInPost = `shareArticle?title=${title}&url=${url}`;
+        let vkontaktePost = `share.php?url=${url}`;
+        let bloggerPost = `blog-this.g?n=${description}&t=${title}&u=${url}`;
+        let wordpressPost = `press-this.php?u=${url}&t=${title}&s=${description}&i=`;
+        let email = `name?cc=cc&bcc=bcc&subject=${title}&body=${description}-${url}`;
+        let redditPost = `submit?title=${title}&url=${url}`;
+        let socialMediaArray = [
+            {
+                site: `Facebook`,
+                shareUrl: `https://web.facebook.com/${facebookPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook.svg`,
+            },
+            {
+                site: `Facebook Messenger`,
+                shareUrl: `https://www.facebook.com/dialog/${facebookMessengerPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook_messenger.svg`,
+            },
+            {
+                site: `Twitter`,
+                shareUrl: `https://twitter.com/intent/${twitterPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/twitter.svg`
+            },
+            {
+                site: `WhatsApp`,
+                shareUrl: `https://web.whatsapp.com/${whatsAppPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/whatsapp.svg`
+            },
+            {
+                site: `Telegram`,
+                shareUrl: `https://t.me/share/${telegramPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/telegram.svg`
+            },
+            {
+                site: `LinkedIn`,
+                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/linkedin.svg`
+            },
+            {
+                site: `Vkontakte`,
+                shareUrl: `https://vk.com/${vkontaktePost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/vkontakte.svg`,
+            },
+            {
+                site: `Blogger`,
+                shareUrl: `https://www.blogger.com/${bloggerPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/blogger.svg`,
+            },
+            {
+                site: `Wordpress`,
+                shareUrl: `https://wordpress.com/wp-admin/${wordpressPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/wordpress.svg`,
+            },
+            {
+                site: `Email`,
+                shareUrl: `mailto:recipient ${email}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/gmail.svg`
+            },
+            {
+                site: `Reddit`,
+                shareUrl: `https://www.reddit.com/${redditPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/reddit.svg`,
+            }
+        ];
+        let table = `<table>\n`;
+        table = table + `\t<tr>\n`;
+        for(const socialMedia of socialMediaArray){
+            table = table + `\t\t<td>\n`;
+            table = table + `\t\t\t<a href="${socialMedia.shareUrl}">\n`
+            table = table + `\t\t\t\t<img src="${socialMedia.iconUrl}" height="48" width="48" alt="${socialMedia.site}"/>\n`
+            table = table + `\t\t\t</a>\n`;
+            table = table + `\t\t</td>\n`;
+        }
+        table = table + `\t</tr>\n`;
+        table = table + `</table>\n\n`;
+        return table;
+    }
+    let create = function (title, description, url) {
+        return createSocialMediaTable(
+            encodeURI(title),
+            encodeURI(description),
+            encodeURI(url));
+    }
+    return {
+        create: create,
+    };
+})();
+module.exports = socialMediaMarkdown;
 
 
 /***/ }),
