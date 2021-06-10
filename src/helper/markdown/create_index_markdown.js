@@ -56,32 +56,52 @@ let createIndexMarkdown = (function () {
             {
                 site: `Facebook`,
                 shareUrl: `https://www.facebook.com/sharer/${facebookPost}`,
-                iconUrl: `https://www.facebook.com/sharer/sharer.png`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook.svg`,
+            },
+            {
+                site: `Facebook Messenger`,
+                shareUrl: `https://www.facebook.com/sharer/${facebookPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook_messenger.svg`,
             },
             {
                 site: `Twitter`,
                 shareUrl: `https://twitter.com/intent/${tweet}`,
-                iconUrl: `https://www.facebook.com/sharer/sharer.png`
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/twitter.svg`
+            },
+            {
+                site: `WhatsApp`,
+                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/whatsapp.svg`
+            },
+            {
+                site: `Telegram`,
+                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/telegram.svg`
+            },
+            {
+                site: `Viber`,
+                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/viber.svg`
             },
             {
                 site: `LinkedIn`,
                 shareUrl: `https://www.linkedin.com/${linkedInPost}`,
-                iconUrl: `https://www.facebook.com/sharer/sharer.png`
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/linkedin.svg`
             },
             {
                 site: `Email`,
                 shareUrl: `mailto:receipient ${email}`,
-                iconUrl: `https://www.facebook.com/sharer/sharer.png`
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/gmail.svg`
             },
             {
                 site: `Reddit`,
                 shareUrl: `https://reddit.com/${redditPost}`,
-                iconUrl: `https://www.facebook.com/sharer/sharer.png`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/reddit.svg`,
             },
             {
                 site: `Tumblr`,
                 shareUrl: `https://www.tumblr.com/share/${tumblrPost}`,
-                iconUrl: `https://www.facebook.com/sharer/sharer.png`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/tumblr.svg`,
             }
         ];
         let table = `<table>\n`;
