@@ -42,9 +42,11 @@ let createIndexMarkdown = (function () {
         let whatsAppPost = `send?text=${title} ${url}`;
         let telegramPost = `url?url=${url}&text=${title}`;
         let linkedInPost = `shareArticle?title=${title}&url=${url}`;
-        let email = `name?cc=cc&bcc=bcc&subject=subject&body=body`;
+        let vkontaktePost = `share.php?url=${url}`;
+        let bloggerPost = `blog-this.g?n=${desription}&t=${title}&u=${url}`;
+        let wordpressPost = `press-this.php?u=${url}&t=${title}&s=${description}&i=`;
+        let email = `name?cc=cc&bcc=bcc&subject=${title}&body=${description}-${url}`;
         let redditPost = `submit?title=${title}&url=${url}`;
-        let tumblrPost = `share?t=${title}&u=${url}&v=3`;
         let socialMediaArray = [
             {
                 site: `Facebook`,
@@ -77,19 +79,29 @@ let createIndexMarkdown = (function () {
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/linkedin.svg`
             },
             {
+                site: `Vkontakte`,
+                shareUrl: `https://vk.com/${vkontaktePost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/vkontakte.svg`,
+            },
+            {
+                site: `Blogger`,
+                shareUrl: `https://www.blogger.com/${bloggerPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/blogger.svg`,
+            },
+            {
+                site: `Wordpress`,
+                shareUrl: `https://wordpress.com/wp-admin/${wordpressPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/wordpress.svg`,
+            },
+            {
                 site: `Email`,
-                shareUrl: `mailto:receipient ${email}`,
+                shareUrl: `mailto:recipient ${email}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/gmail.svg`
             },
             {
                 site: `Reddit`,
                 shareUrl: `https://www.reddit.com/${redditPost}`,
                 iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/reddit.svg`,
-            },
-            {
-                site: `Tumblr`,
-                shareUrl: `https://www.tumblr.com/${tumblrPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/tumblr.svg`,
             }
         ];
         let table = `<table>\n`;
@@ -112,12 +124,12 @@ let createIndexMarkdown = (function () {
         // let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
         let markdown = `# 🔝 Top GitHub Users By Country\n\n`;
         markdown = markdown + `<img align="right" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" alt="Sri Lanka">\n\n`;
-        markdown = markdown + `List of most active github users based on public contributions, and number of followers  by country or state. `;
+        markdown = markdown + `List of most active GitHub users based on public contributions, and number of followers  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
         markdown = markdown + `This repository contains users \`12 countries\` and \`300 cities\`. \n`;
         markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
         markdown = markdown + `The list can be found in [config.json](https://github.com/github-commits-top).\n\n`;
-        markdown = markdown + `The project is maintained by [gayanvoice](github.com). `
+        markdown = markdown + `The project maintained by [gayanvoice](github.com). `
         markdown = markdown + `Don't forget to follow him on [GitHub](github.com), [Twitter](twitter.com), and [Medium](medium.com).\n\n`;
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + createSocialMediaTable(
