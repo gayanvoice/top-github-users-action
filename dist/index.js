@@ -12665,9 +12665,6 @@ let outputCheckpoint = (function () {
     }
     let readCheckpointFile = async function () {
         return await checkpointFile.readCheckpointFile();
-
-
-
     }
     return {
         saveCheckpointFile: saveCheckpointFile,
@@ -12675,7 +12672,6 @@ let outputCheckpoint = (function () {
     };
 })();
 module.exports = outputCheckpoint;
-
 
 /***/ }),
 
@@ -12767,7 +12763,6 @@ let configFile = (function () {
 })();
 module.exports = configFile;
 
-
 /***/ }),
 
 /***/ 2025:
@@ -12800,13 +12795,12 @@ let commitGit = function () {
     let INSIGHT_BOT_USERNAME = 'github-actions[bot]';
     let INSIGHT_BOT_EMAIL = '41898282+github-actions[bot]@users.noreply.github.com';
     let commit = async function (message) {
-        console.log(`Git Commit ${message}`)
+        console.log(`Git Commit "${message}"`)
         try {
             await git.commit(INSIGHT_BOT_USERNAME, INSIGHT_BOT_EMAIL, message);
         } catch (error) {
             console.log(error);
         }
-
     }
     return {
         commit: commit
@@ -12867,12 +12861,12 @@ let headerComponent = function () {
         let markdown = ``;
         if(pageTitle === undefined && country === undefined){
             markdown = markdown + `# Top GitHub Users By Country `;
-            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/207237845/small/week.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/207237845/week.md)\n`
-            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/207237845/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/207237845/week.md)\n\n`;
+            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/373383893/small/week.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/373383893/week.md)\n`
+            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/373383893/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/373383893/week.md)\n\n`;
         } else {
             markdown = markdown + `# Top GitHub Users By ${pageTitle} in ${country} `;
-            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/207237845/small/week.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/207237845/week.md)\n`
-            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/207237845/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/207237845/week.md)\n\n`;
+            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/373383893/small/week.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/373383893/week.md)\n`
+            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/373383893/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/373383893/week.md)\n\n`;
         }
         return markdown;
     }
@@ -13212,7 +13206,6 @@ let outputMarkdown = (function () {
 })();
 module.exports = outputMarkdown;
 
-
 /***/ }),
 
 /***/ 5815:
@@ -13291,7 +13284,6 @@ let createFollowersPage = (function () {
 })();
 module.exports = createFollowersPage;
 
-
 /***/ }),
 
 /***/ 2833:
@@ -13357,8 +13349,8 @@ let createIndexPage = (function () {
         markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
         markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
         markdown = markdown + `The list can be found in [config.json](https://github.com/${githubUsernameAndRepository}/blob/main/config.json).\n\n`;
-        markdown = markdown + `The project maintained by [gayanvoice](https://github.com/${githubUsernameAndRepository}). `
-        markdown = markdown + `Don't forget to follow him on [GitHub](https://github.com/${githubUsernameAndRepository}), [Twitter](https://twitter.com/gayanvoice), and [Medium](https://gayanvoice.medium.com/).\n\n`;
+        markdown = markdown + `The project maintained by [gayanvoice](https://github.com/gayanvoice). `
+        markdown = markdown + `Don't forget to follow him on [GitHub](https://github.com/gayanvoice), [Twitter](https://twitter.com/gayanvoice), and [Medium](https://gayanvoice.medium.com/).\n\n`;
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + socialMediaComponent.create(
             "Top GitHub Users By Country",
@@ -13381,7 +13373,6 @@ let createIndexPage = (function () {
     };
 })();
 module.exports = createIndexPage;
-
 
 /***/ }),
 
@@ -13460,7 +13451,6 @@ let createPublicContributionsPage = (function () {
     };
 })();
 module.exports = createPublicContributionsPage;
-
 
 /***/ }),
 
@@ -13542,7 +13532,6 @@ let createTotalContributionsPage = (function () {
 })();
 module.exports = createTotalContributionsPage;
 
-
 /***/ }),
 
 /***/ 639:
@@ -13621,7 +13610,7 @@ let Index = function () {
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
     const MAXIMUM_ITERATIONS = 100;
-    const MAXIMUM_ERROR_ITERATIONS = 2;
+    const MAXIMUM_ERROR_ITERATIONS = 4;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
         if(indexOfTheCountry === checkpoint){
@@ -13657,7 +13646,7 @@ let Index = function () {
             }
             await outputCheckpoint.saveCheckpointFile(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint)
         }
-        await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
+        if(!readConfigResponseModel.devMode) await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
     }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
@@ -13666,10 +13655,8 @@ let Index = function () {
             if(!readConfigResponseModel.devMode) await pullGit.pull();
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
-            if(!readConfigResponseModel.devMode){
-                await commitGit.commit("Update users");
-                await pushGit.push();
-            }
+            if(!readConfigResponseModel.devMode) await commitGit.commit("Update users");
+            if(!readConfigResponseModel.devMode) await pushGit.push();
         }
     }
     return {

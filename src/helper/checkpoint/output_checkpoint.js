@@ -14,9 +14,6 @@ let outputCheckpoint = (function () {
     }
     let readCheckpointFile = async function () {
         return await checkpointFile.readCheckpointFile();
-
-
-
     }
     return {
         saveCheckpointFile: saveCheckpointFile,

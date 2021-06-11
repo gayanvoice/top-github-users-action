@@ -17,7 +17,7 @@ let Index = function () {
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
     const MAXIMUM_ITERATIONS = 100;
-    const MAXIMUM_ERROR_ITERATIONS = 2;
+    const MAXIMUM_ERROR_ITERATIONS = 4;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
         if(indexOfTheCountry === checkpoint){
@@ -53,7 +53,7 @@ let Index = function () {
             }
             await outputCheckpoint.saveCheckpointFile(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint)
         }
-        await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
+        if(!readConfigResponseModel.devMode) await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
     }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
@@ -62,10 +62,8 @@ let Index = function () {
             if(!readConfigResponseModel.devMode) await pullGit.pull();
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
-            if(!readConfigResponseModel.devMode){
-                await commitGit.commit("Update users");
-                await pushGit.push();
-            }
+            if(!readConfigResponseModel.devMode) await commitGit.commit("Update users");
+            if(!readConfigResponseModel.devMode) await pushGit.push();
         }
     }
     return {
