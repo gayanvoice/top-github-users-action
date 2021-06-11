@@ -1,6 +1,9 @@
-const formatMarkdown = require('./format_markdown');
-const socialMediaMarkdown = require('./social_media_markdown');
-let createIndexMarkdown = (function () {
+const formatMarkdown = require('../format_markdown');
+const headerComponent = require('../component/header_component');
+const socialMediaComponent = require('../component/social_media_component');
+const thirdPartyComponent = require('../component/third_party_component');
+const licenseComponent = require('../component/license_component');
+let createIndexPage = (function () {
     let createListOfCities = function (locationDataModel) {
         let cities = ``;
         for(const location of locationDataModel.locations) {
@@ -47,11 +50,8 @@ let createIndexMarkdown = (function () {
         table = table + `</table>\n\n`;
         return table;
     }
-    let create = function (GITHUB_REPOSITORY, readConfigResponseModel) {
-        let indexUrl  = `https://github.com/${GITHUB_REPOSITORY}`
-        // let publicContributionsUrl  = `${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        // let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let markdown = `# 🔝 Top GitHub Users By Country\n\n`;
+    let create = function (githubUsernameAndRepository, readConfigResponseModel) {
+        let markdown = headerComponent.create();
         markdown = markdown + `<img align="right" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" alt="Sri Lanka">\n\n`;
         markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
@@ -61,28 +61,24 @@ let createIndexMarkdown = (function () {
         markdown = markdown + `The project maintained by [gayanvoice](github.com). `
         markdown = markdown + `Don't forget to follow him on [GitHub](github.com), [Twitter](twitter.com), and [Medium](medium.com).\n\n`;
         markdown = markdown + `### 🚀 Share on\n\n`;
-        markdown = markdown + socialMediaMarkdown.create(
+        markdown = markdown + socialMediaComponent.create(
             "Top GitHub Users By Country",
             "List of most active github users based on public contributions, and number of followers by country or state",
-            indexUrl);
-        markdown = markdown + createListOfCountriesAndCitiesTable(indexUrl, readConfigResponseModel);
+            `https://github.com/${githubUsernameAndRepository}`);
+        markdown = markdown + createListOfCountriesAndCitiesTable(
+            `https://github.com/${githubUsernameAndRepository}`,
+            readConfigResponseModel);
         markdown = markdown + `### 🚀 Share on\n\n`;
-        markdown = markdown + socialMediaMarkdown.create(
+        markdown = markdown + socialMediaComponent.create(
             "Top GitHub Users By Country",
             "List of most active github users based on public contributions, and number of followers by country or state",
-            indexUrl);
-        markdown = markdown + `## 📦 Third party\n\n`;
-        markdown = markdown + `- [@octokit/graphql](https://www.npmjs.com/package/@octokit/graphql) - Send GraphQL requests to GitHub API.\n`;
-        markdown = markdown + `- [fs-extra](https://www.npmjs.com/package/fs-extra) - Creating directories and files.\n`
-        markdown = markdown + `- [simple-git](https://www.npmjs.com/package/simple-git) - Handling Git commands.\n`
-        markdown = markdown + `## 📄 License\n\n`;
-        markdown = markdown + `- Repository: [gayanvoice/top-github-users-monitor](https://github.com/gayanvoice/top-github-users-monitor)\n`;
-        markdown = markdown + `- Template - [gayanvoice/${GITHUB_REPOSITORY}](${indexUrl})\n`;
-        markdown = markdown + `- Code: [MIT](./LICENSE) © [Gayan Kuruppu](https://github.com/gayanvoice)\n`;
+            `https://github.com/${githubUsernameAndRepository}`);
+        markdown = markdown + thirdPartyComponent.create();
+        markdown = markdown + licenseComponent.create(githubUsernameAndRepository);
         return markdown;
     }
     return {
         create: create,
     };
 })();
-module.exports = createIndexMarkdown;
+module.exports = createIndexPage;

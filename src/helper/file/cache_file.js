@@ -12,8 +12,10 @@ let cacheFile = (function () {
     let readCacheFile = async function (fileName) {
         let readFileResponseModel = await file.readJson(fileName);
         if(readFileResponseModel.status){
+            console.log("cache file exists", fileName)
             return new ReadCacheResponseModel(readFileResponseModel.status, readFileResponseModel.content)
         } else {
+            console.log("cache file does not exist", fileName)
             return new ReadCacheResponseModel(readFileResponseModel.status)
         }
     }

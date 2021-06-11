@@ -1,5 +1,5 @@
-const formatMarkdown = require('./format_markdown');
-let socialMediaMarkdown = (function () {
+const formatMarkdown = require('../format_markdown');
+let socialMediaComponent = (function () {
     let createSocialMediaTable = function (title, description, url) {
         let facebookPost = `sharer.php?t=${title}&u=${url}&_rdc=1&_rdr`;
         let facebookMessengerPost = `send?link=${url}&app_id=291494419107518&redirect_uri=${url}`;
@@ -92,4 +92,4 @@ let socialMediaMarkdown = (function () {
         create: create,
     };
 })();
-module.exports = socialMediaMarkdown;
+module.exports = socialMediaComponent;

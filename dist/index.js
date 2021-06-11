@@ -12690,8 +12690,10 @@ let cacheFile = (function () {
     let readCacheFile = async function (fileName) {
         let readFileResponseModel = await file.readJson(fileName);
         if(readFileResponseModel.status){
+            console.log("cache file exists", fileName)
             return new ReadCacheResponseModel(readFileResponseModel.status, readFileResponseModel.content)
         } else {
+            console.log("cache file does not exist", fileName)
             return new ReadCacheResponseModel(readFileResponseModel.status)
         }
     }
@@ -12851,325 +12853,220 @@ module.exports = pushGit;
 
 /***/ }),
 
-/***/ 7937:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ 5091:
+/***/ ((module) => {
 
-const formatMarkdown = __nccwpck_require__(3164);
-let createFollowersMarkdown = (function () {
-    let createTable = function (readCacheResponseModel) {
-        let users = readCacheResponseModel.users;
-        let index = 1;
-        users.sort((a, b) => parseFloat(b.followers) - parseFloat(a.followers));
-        let row = `<table>\n`;
-        row = row + `\t<tr>\n`;
-        row = row + `\t\t<th>#</th>\n`;
-        row = row + `\t\t<th>Name</th>\n`;
-        row = row + `\t\t<th>Company</th>\n`;
-        row = row + `\t\t<th>Twitter Username</th>\n`;
-        row = row + `\t\t<th>Location</th>\n`;
-        row = row + `\t\t<th>Followers</th>\n`;
-        row = row + `\t</tr>\n`;
-        for (const user of readCacheResponseModel.users) {
-            if(user.publicContributions > 0){
-                row = row + `\t<tr>\n`;
-                row = row + `\t\t<td>${index}</td>\n`;
-                row = row + `\t\t<td>\n`;
-                row = row + `\t\t\t<a href="https://github.com/${user.login}">\n`;
-                row = row + `\t\t\t\t<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.login}\n`;
-                row = row + `\t\t\t</a><br/>\n`;
-                row = row + `\t\t\t${formatMarkdown.getName(user.name)}\n`;
-                row = row + `\t\t</td>\n`;
-                row = row + `\t\t<td>${formatMarkdown.getCompany(user.company)}</td>\n`;
-                row = row + `\t\t<td>${formatMarkdown.getTwitterUsername(user.twitterUsername)}</td>\n`;
-                row = row + `\t\t<td>${user.location}</td>\n`;
-                row = row + `\t\t<td>${user.followers}</td>\n`;
-                row = row + `\t</tr>\n`;
-            }
-            index++;
+let headerComponent = function () {
+    let create = function (pageTitle, country) {
+        let markdown = ``;
+        if(pageTitle === undefined && country === undefined){
+            markdown = markdown + `# Top GitHub Users By Country `;
+            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/207237845/small/week.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/207237845/week.md)\n`
+            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/207237845/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/207237845/week.md)\n\n`;
+        } else {
+            markdown = markdown + `# Top GitHub Users By ${pageTitle} in ${country} `;
+            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/207237845/small/week.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/207237845/week.md)\n`
+            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/207237845/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/207237845/week.md)\n\n`;
         }
-        row = row + `</table>\n`;
-        return row;
-    }
-    let create = function (GITHUB_REPOSITORY, locationDataModel, readCacheResponseModel, readConfigResponseModel) {
-        let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country);
-        let indexUrl  = `https://github.com/${GITHUB_REPOSITORY}`
-        let publicContributionsUrl  = `${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let markdown = `# Top GitHub Users By Followers in ${country}\n\n`;
-        markdown = markdown + `<img align="right" width="200" src="${locationDataModel.imageUrl}" alt="${country}">\n\n`;
-        markdown = markdown + `The number of followers of each user in ${country} on \`${formatMarkdown.getDate()}\`. `;
-        markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(locationDataModel)}.\n\n`;
-        markdown = markdown + `There are \`${readConfigResponseModel.locations.length} countries\` can be found [here](${indexUrl}).\n\n`;
-        markdown = markdown + `There are \`${readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(readCacheResponseModel)} followers\` to be on this list.\n\n`;
-        markdown = markdown + `<table>\n`;
-        markdown = markdown + `\t<tr>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<a href="${publicContributionsUrl}">Top Users By Public Contributions</a>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<a href="${totalContributionsUrl}">Top Users By Total Contributions</a>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<strong>Top Users By Followers</strong>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t</tr>\n`;
-        markdown = markdown + `</table>\n`;
-        markdown = markdown + `${createTable(readCacheResponseModel)}\n\n`;
         return markdown;
     }
     return {
         create: create,
     };
-})();
-module.exports = createFollowersMarkdown;
-
+}();
+module.exports = headerComponent;
 
 /***/ }),
 
-/***/ 9292:
+/***/ 9805:
+/***/ ((module) => {
+
+let licenseComponent = function () {
+    let create = function (githubUserAndRepository) {
+        let markdown = `## 📄 License\n\n`;
+        markdown = markdown + `- GitHub Action - [${githubUserAndRepository}-monitor](https://github.com/${githubUserAndRepository}-monitor)\n`;
+        markdown = markdown + `- Repository - [${githubUserAndRepository}](https://github.com/${githubUserAndRepository})\n`;
+        markdown = markdown + `- Data in the \`./cache\` directory - [Open Database License](https://opendatacommons.org/licenses/odbl/1-0/)\n`;
+        markdown = markdown + `- Code - [MIT](./LICENSE) © [Gayan Kuruppu](https://github.com/gayanvoice)\n`;
+        return markdown;
+    }
+    return {
+        create: create,
+    };
+}();
+module.exports = licenseComponent;
+
+/***/ }),
+
+/***/ 1049:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const formatMarkdown = __nccwpck_require__(3164);
-const socialMediaMarkdown = __nccwpck_require__(5501);
-let createIndexMarkdown = (function () {
-    let createListOfCities = function (locationDataModel) {
-        let cities = ``;
-        for(const location of locationDataModel.locations) {
-            if(locationDataModel.country !== location) {
-                cities = cities + `\t\t\t<code>${formatMarkdown.capitalizeTheFirstLetterOfEachWord(location)}</code> \n`;
-            }
-        }
-        return cities;
-    }
-    let getNumberOfCities = function (readConfigResponseModel) {
-        let numberOfCities = 0;
-        for(const locationDataModel of readConfigResponseModel.locations) {
-            for (const location of locationDataModel.locations) {
-                if (locationDataModel.country !== location) {
-                    numberOfCities++;
-                }
-            }
-        }
-        return numberOfCities;
-    }
-    let createListOfCountriesAndCitiesTable = function (indexUrl, readConfigResponseModel) {
-        readConfigResponseModel.locations.sort((a,b) => a.country > b.country ? 1 : -1);
+let shortcutMenuComponent = function () {
+    let create = function (indexUrl, country, index) {
+        let publicContributionsUrl  = `${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(country)}.md`;
+        let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(country)}.md`;
+        let followersUrl  = `${indexUrl}/blob/main/markdown/followers/${formatMarkdown.getCountryName(country)}.md`;
         let table = `<table>\n`;
         table = table + `\t<tr>\n`;
-        table = table + `\t\t<th>\n`;
-        table = table + `\t\t\tCountry/State\n`;
-        table = table + `\t\t</th>\n`;
-        table = table + `\t\t<th>\n`;
-        table = table + `\t\t\tCities\n`;
-        table = table + `\t\t</th>\n`;
-        table = table + `\t</tr>\n`;
-        for(const locationDataModel of readConfigResponseModel.locations) {
-            table = table + `\t<tr>\n`;
+        if(index === 0){
             table = table + `\t\t<td>\n`;
-            table = table + `\t\t\t<a href="${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md">\n`;
-            table = table + `\t\t\t\t${formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country)}\n`;
-            table = table + `\t\t\t</a>\n`;
+            table = table + `\t\t\t<strong>Top Users By Public Contributions</strong>\n`;
             table = table + `\t\t</td>\n`;
+        } else {
             table = table + `\t\t<td>\n`;
-            table = table + createListOfCities(locationDataModel);
+            table = table + `\t\t\t<a href="${publicContributionsUrl}">Top Users By Public Contributions</a>\n`;
             table = table + `\t\t</td>\n`;
-            table = table + `\t</tr>\n`;
         }
+        if(index === 1){
+            table = table + `\t\t<td>\n`;
+            table = table + `\t\t\t<strong>Top Users By Total Contributions</strong>\n`;
+            table = table + `\t\t</td>\n`;
+        } else {
+            table = table + `\t\t<td>\n`;
+            table = table + `\t\t\t<a href="${totalContributionsUrl}">Top Users By Total Contributions</a>\n`;
+            table = table + `\t\t</td>\n`;
+        }
+        if(index === 2){
+            table = table + `\t\t<td>\n`;
+            table = table + `\t\t\t<strong>Top Users By Followers</strong>\n`;
+            table = table + `\t\t</td>\n`;
+        } else {
+            table = table + `\t\t<td>\n`;
+            table = table + `\t\t\t<a href="${followersUrl}">Top Users By Followers</a>\n`;
+            table = table + `\t\t</td>\n`;
+        }
+        table = table + `\t</tr>\n`;
         table = table + `</table>\n\n`;
         return table;
     }
-    let create = function (GITHUB_REPOSITORY, readConfigResponseModel) {
-        let indexUrl  = `https://github.com/${GITHUB_REPOSITORY}`
-        // let publicContributionsUrl  = `${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        // let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let markdown = `# 🔝 Top GitHub Users By Country\n\n`;
-        markdown = markdown + `<img align="right" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" alt="Sri Lanka">\n\n`;
-        markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
-        markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
-        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
-        markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
-        markdown = markdown + `The list can be found in [config.json](https://github.com/github-commits-top).\n\n`;
-        markdown = markdown + `The project maintained by [gayanvoice](github.com). `
-        markdown = markdown + `Don't forget to follow him on [GitHub](github.com), [Twitter](twitter.com), and [Medium](medium.com).\n\n`;
-        markdown = markdown + `### 🚀 Share on\n\n`;
-        markdown = markdown + socialMediaMarkdown.create(
-            "Top GitHub Users By Country",
-            "List of most active github users based on public contributions, and number of followers by country or state",
-            indexUrl);
-        markdown = markdown + createListOfCountriesAndCitiesTable(indexUrl, readConfigResponseModel);
-        markdown = markdown + `### 🚀 Share on\n\n`;
-        markdown = markdown + socialMediaMarkdown.create(
-            "Top GitHub Users By Country",
-            "List of most active github users based on public contributions, and number of followers by country or state",
-            indexUrl);
-        markdown = markdown + `## 📦 Third party\n\n`;
+    return {
+        create: create,
+    };
+}();
+module.exports = shortcutMenuComponent;
+
+
+/***/ }),
+
+/***/ 8272:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const formatMarkdown = __nccwpck_require__(3164);
+let socialMediaComponent = (function () {
+    let createSocialMediaTable = function (title, description, url) {
+        let facebookPost = `sharer.php?t=${title}&u=${url}&_rdc=1&_rdr`;
+        let facebookMessengerPost = `send?link=${url}&app_id=291494419107518&redirect_uri=${url}`;
+        let twitterPost = `tweet?text=${title}&url=${url}`;
+        let whatsAppPost = `send?text=${title} ${url}`;
+        let telegramPost = `url?url=${url}&text=${title}`;
+        let linkedInPost = `shareArticle?title=${title}&url=${url}`;
+        let vkontaktePost = `share.php?url=${url}`;
+        let bloggerPost = `blog-this.g?n=${description}&t=${title}&u=${url}`;
+        let wordpressPost = `press-this.php?u=${url}&t=${title}&s=${description}&i=`;
+        let email = `name?cc=cc&bcc=bcc&subject=${title}&body=${description}-${url}`;
+        let redditPost = `submit?title=${title}&url=${url}`;
+        let socialMediaArray = [
+            {
+                site: `Facebook`,
+                shareUrl: `https://web.facebook.com/${facebookPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook.svg`,
+            },
+            {
+                site: `Facebook Messenger`,
+                shareUrl: `https://www.facebook.com/dialog/${facebookMessengerPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook_messenger.svg`,
+            },
+            {
+                site: `Twitter`,
+                shareUrl: `https://twitter.com/intent/${twitterPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/twitter.svg`
+            },
+            {
+                site: `WhatsApp`,
+                shareUrl: `https://web.whatsapp.com/${whatsAppPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/whatsapp.svg`
+            },
+            {
+                site: `Telegram`,
+                shareUrl: `https://t.me/share/${telegramPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/telegram.svg`
+            },
+            {
+                site: `LinkedIn`,
+                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/linkedin.svg`
+            },
+            {
+                site: `Vkontakte`,
+                shareUrl: `https://vk.com/${vkontaktePost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/vkontakte.svg`,
+            },
+            {
+                site: `Blogger`,
+                shareUrl: `https://www.blogger.com/${bloggerPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/blogger.svg`,
+            },
+            {
+                site: `Wordpress`,
+                shareUrl: `https://wordpress.com/wp-admin/${wordpressPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/wordpress.svg`,
+            },
+            {
+                site: `Email`,
+                shareUrl: `mailto:recipient ${email}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/gmail.svg`
+            },
+            {
+                site: `Reddit`,
+                shareUrl: `https://www.reddit.com/${redditPost}`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/reddit.svg`,
+            }
+        ];
+        let table = `<table>\n`;
+        table = table + `\t<tr>\n`;
+        for(const socialMedia of socialMediaArray){
+            table = table + `\t\t<td>\n`;
+            table = table + `\t\t\t<a href="${socialMedia.shareUrl}">\n`
+            table = table + `\t\t\t\t<img src="${socialMedia.iconUrl}" height="48" width="48" alt="${socialMedia.site}"/>\n`
+            table = table + `\t\t\t</a>\n`;
+            table = table + `\t\t</td>\n`;
+        }
+        table = table + `\t</tr>\n`;
+        table = table + `</table>\n\n`;
+        return table;
+    }
+    let create = function (title, description, url) {
+        return createSocialMediaTable(
+            encodeURI(title),
+            encodeURI(description),
+            encodeURI(url));
+    }
+    return {
+        create: create,
+    };
+})();
+module.exports = socialMediaComponent;
+
+
+/***/ }),
+
+/***/ 6433:
+/***/ ((module) => {
+
+let thirdPartyComponent = function () {
+    let create = function () {
+        let markdown = `## 📦 Third party\n\n`;
         markdown = markdown + `- [@octokit/graphql](https://www.npmjs.com/package/@octokit/graphql) - Send GraphQL requests to GitHub API.\n`;
         markdown = markdown + `- [fs-extra](https://www.npmjs.com/package/fs-extra) - Creating directories and files.\n`
         markdown = markdown + `- [simple-git](https://www.npmjs.com/package/simple-git) - Handling Git commands.\n`
-        markdown = markdown + `## 📄 License\n\n`;
-        markdown = markdown + `- Repository: [gayanvoice/top-github-users-monitor](https://github.com/gayanvoice/top-github-users-monitor)\n`;
-        markdown = markdown + `- Template - [gayanvoice/${GITHUB_REPOSITORY}](${indexUrl})\n`;
-        markdown = markdown + `- Code: [MIT](./LICENSE) © [Gayan Kuruppu](https://github.com/gayanvoice)\n`;
         return markdown;
     }
     return {
         create: create,
     };
-})();
-module.exports = createIndexMarkdown;
-
-
-/***/ }),
-
-/***/ 7404:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const formatMarkdown = __nccwpck_require__(3164);
-let createPublicContributionsMarkdown = (function () {
-    let createTable = function (readCacheResponseModel) {
-        let users = readCacheResponseModel.users;
-        let index = 1;
-        users.sort((a, b) => parseFloat(b.publicContributions) - parseFloat(a.publicContributions));
-        let row = `<table>\n`;
-        row = row + `\t<tr>\n`;
-        row = row + `\t\t<th>#</th>\n`;
-        row = row + `\t\t<th>Name</th>\n`;
-        row = row + `\t\t<th>Company</th>\n`;
-        row = row + `\t\t<th>Twitter Username</th>\n`;
-        row = row + `\t\t<th>Location</th>\n`;
-        row = row + `\t\t<th>Public Contributions</th>\n`;
-        row = row + `\t</tr>\n`;
-        for (const user of readCacheResponseModel.users) {
-            if(user.publicContributions > 0){
-                row = row + `\t<tr>\n`;
-                row = row + `\t\t<td>${index}</td>\n`;
-                row = row + `\t\t<td>\n`;
-                row = row + `\t\t\t<a href="https://github.com/${user.login}">\n`;
-                row = row + `\t\t\t\t<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.login}\n`;
-                row = row + `\t\t\t</a><br/>\n`;
-                row = row + `\t\t\t${formatMarkdown.getName(user.name)}\n`;
-                row = row + `\t\t</td>\n`;
-                row = row + `\t\t<td>${formatMarkdown.getCompany(user.company)}</td>\n`;
-                row = row + `\t\t<td>${formatMarkdown.getTwitterUsername(user.twitterUsername)}</td>\n`;
-                row = row + `\t\t<td>${user.location}</td>\n`;
-                row = row + `\t\t<td>${user.publicContributions}</td>\n`;
-                row = row + `\t</tr>\n`;
-            }
-            index++;
-        }
-        row = row + `</table>\n`;
-        return row;
-    }
-    let create = function (GITHUB_REPOSITORY, locationDataModel, readCacheResponseModel, readConfigResponseModel) {
-        let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country);
-        let indexUrl  = `https://github.com/${GITHUB_REPOSITORY}`
-        let totalContributionsUrl  = `${indexUrl}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let followersUrl  = `${indexUrl}/blob/main/markdown/followers/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let markdown = `# Top GitHub Users By Public Contributions in ${country}\n\n`;
-        markdown = markdown + `<img align="right" width="200" src="${locationDataModel.imageUrl}" alt="${country}">\n\n`;
-        markdown = markdown + `The public contributions to public repos by users in ${country} on \`${formatMarkdown.getDate()}\`. `;
-        markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(locationDataModel)}.\n\n`;
-        markdown = markdown + `There are \`${readConfigResponseModel.locations.length} countries\` can be found [here](${indexUrl}).\n\n`;
-        markdown = markdown + `There are \`${readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(readCacheResponseModel)} followers\` to be on this list.\n\n`;
-        markdown = markdown + `<table>\n`;
-        markdown = markdown + `\t<tr>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<strong>Top Users By Public Contributions</strong>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<a href="${totalContributionsUrl}">Top Users By Total Contributions</a>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<a href="${followersUrl}">Top Users By Followers</a>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t</tr>\n`;
-        markdown = markdown + `</table>\n`;
-        markdown = markdown + `${createTable(readCacheResponseModel)}\n\n`;
-        return markdown;
-    }
-    return {
-        create: create,
-    };
-})();
-module.exports = createPublicContributionsMarkdown;
-
-
-/***/ }),
-
-/***/ 5855:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-const formatMarkdown = __nccwpck_require__(3164);
-let createTotalContributionsMarkdown = (function () {
-    let createTable = function (readCacheResponseModel) {
-        let users = readCacheResponseModel.users;
-        let index = 1;
-        users.sort((a, b) => parseFloat(b.publicContributions + b.privateContributions) -
-            parseFloat(a.publicContributions + a.privateContributions));
-        let row = `<table>\n`;
-        row = row + `\t<tr>\n`;
-        row = row + `\t\t<th>#</th>\n`;
-        row = row + `\t\t<th>Name</th>\n`;
-        row = row + `\t\t<th>Company</th>\n`;
-        row = row + `\t\t<th>Twitter Username</th>\n`;
-        row = row + `\t\t<th>Location</th>\n`;
-        row = row + `\t\t<th>Public Contributions</th>\n`;
-        row = row + `\t\t<th>Total Contributions</th>\n`;
-        row = row + `\t</tr>\n`;
-        for (const user of readCacheResponseModel.users) {
-            if(user.publicContributions + user.privateContributions> 0){
-                row = row + `\t<tr>\n`;
-                row = row + `\t\t<td>${index}</td>\n`;
-                row = row + `\t\t<td>\n`;
-                row = row + `\t\t\t<a href="https://github.com/${user.login}">\n`;
-                row = row + `\t\t\t\t<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.login}\n`;
-                row = row + `\t\t\t</a><br/>\n`;
-                row = row + `\t\t\t${formatMarkdown.getName(user.name)}\n`;
-                row = row + `\t\t</td>\n`;
-                row = row + `\t\t<td>${formatMarkdown.getCompany(user.company)}</td>\n`;
-                row = row + `\t\t<td>${formatMarkdown.getTwitterUsername(user.twitterUsername)}</td>\n`;
-                row = row + `\t\t<td>${user.location}</td>\n`;
-                row = row + `\t\t<td>${user.publicContributions}</td>\n`;
-                row = row + `\t\t<td>${user.publicContributions + user.privateContributions}</td>\n`;
-                row = row + `\t</tr>\n`;
-            }
-            index++;
-        }
-        row = row + `</table>\n`;
-        return row;
-    }
-    let create = function (GITHUB_REPOSITORY, locationDataModel, readCacheResponseModel, readConfigResponseModel) {
-        let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country);
-        let indexUrl  = `https://github.com/${GITHUB_REPOSITORY}`
-        let publicContributionsUrl  = `${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let followersUrl  = `${indexUrl}/blob/main/markdown/followers/${formatMarkdown.getCountryName(locationDataModel.country)}.md`;
-        let markdown = `# Top GitHub Users By Total Contributions in ${country}\n\n`;
-        markdown = markdown + `<img align="right" width="200" src="${locationDataModel.imageUrl}" alt="${country}">\n\n`;
-        markdown = markdown + `The contributions to public and private repositories by users in ${country} on \`${formatMarkdown.getDate()}\`. `;
-        markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(locationDataModel)}.\n\n`;
-        markdown = markdown + `There are \`${readConfigResponseModel.locations.length} countries\` can be found [here](${indexUrl}).\n\n`;
-        markdown = markdown + `There are \`${readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(readCacheResponseModel)} followers\` to be on this list.\n\n`;
-        markdown = markdown + `<table>\n`;
-        markdown = markdown + `\t<tr>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<a href="${publicContributionsUrl}">Top Users By Public Contributions</a>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<strong>Top Users By Total Contributions</strong>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t\t<td>\n`;
-        markdown = markdown + `\t\t\t<a href="${followersUrl}">Top Users By Followers</a>\n`;
-        markdown = markdown + `\t\t</td>\n`;
-        markdown = markdown + `\t</tr>\n`;
-        markdown = markdown + `</table>\n`;
-        markdown = markdown + `${createTable(readCacheResponseModel)}\n\n`;
-        return markdown;
-    }
-    return {
-        create: create,
-    };
-})();
-module.exports = createTotalContributionsMarkdown;
+}();
+module.exports = thirdPartyComponent;
 
 
 /***/ }),
@@ -13312,104 +13209,332 @@ module.exports = outputMarkdown;
 
 /***/ }),
 
-/***/ 5501:
+/***/ 5815:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const formatMarkdown = __nccwpck_require__(3164);
-let socialMediaMarkdown = (function () {
-    let createSocialMediaTable = function (title, description, url) {
-        let facebookPost = `sharer.php?t=${title}&u=${url}&_rdc=1&_rdr`;
-        let facebookMessengerPost = `send?link=${url}&app_id=291494419107518&redirect_uri=${url}`;
-        let twitterPost = `tweet?text=${title}&url=${url}`;
-        let whatsAppPost = `send?text=${title} ${url}`;
-        let telegramPost = `url?url=${url}&text=${title}`;
-        let linkedInPost = `shareArticle?title=${title}&url=${url}`;
-        let vkontaktePost = `share.php?url=${url}`;
-        let bloggerPost = `blog-this.g?n=${description}&t=${title}&u=${url}`;
-        let wordpressPost = `press-this.php?u=${url}&t=${title}&s=${description}&i=`;
-        let email = `name?cc=cc&bcc=bcc&subject=${title}&body=${description}-${url}`;
-        let redditPost = `submit?title=${title}&url=${url}`;
-        let socialMediaArray = [
-            {
-                site: `Facebook`,
-                shareUrl: `https://web.facebook.com/${facebookPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook.svg`,
-            },
-            {
-                site: `Facebook Messenger`,
-                shareUrl: `https://www.facebook.com/dialog/${facebookMessengerPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook_messenger.svg`,
-            },
-            {
-                site: `Twitter`,
-                shareUrl: `https://twitter.com/intent/${twitterPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/twitter.svg`
-            },
-            {
-                site: `WhatsApp`,
-                shareUrl: `https://web.whatsapp.com/${whatsAppPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/whatsapp.svg`
-            },
-            {
-                site: `Telegram`,
-                shareUrl: `https://t.me/share/${telegramPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/telegram.svg`
-            },
-            {
-                site: `LinkedIn`,
-                shareUrl: `https://www.linkedin.com/${linkedInPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/linkedin.svg`
-            },
-            {
-                site: `Vkontakte`,
-                shareUrl: `https://vk.com/${vkontaktePost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/vkontakte.svg`,
-            },
-            {
-                site: `Blogger`,
-                shareUrl: `https://www.blogger.com/${bloggerPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/blogger.svg`,
-            },
-            {
-                site: `Wordpress`,
-                shareUrl: `https://wordpress.com/wp-admin/${wordpressPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/wordpress.svg`,
-            },
-            {
-                site: `Email`,
-                shareUrl: `mailto:recipient ${email}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/gmail.svg`
-            },
-            {
-                site: `Reddit`,
-                shareUrl: `https://www.reddit.com/${redditPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/reddit.svg`,
-            }
-        ];
+const headerComponent = __nccwpck_require__(5091);
+const socialMediaComponent = __nccwpck_require__(8272);
+const shortcutMenuComponent = __nccwpck_require__(1049);
+const thirdPartyComponent = __nccwpck_require__(6433);
+const licenseComponent = __nccwpck_require__(9805);
+let createFollowersPage = (function () {
+    let createUserTableByPublicContributions = function (readCacheResponseModel) {
+        readCacheResponseModel.users.sort((a, b) => parseFloat(b.followers) - parseFloat(a.followers));
+        let index = 1;
         let table = `<table>\n`;
         table = table + `\t<tr>\n`;
-        for(const socialMedia of socialMediaArray){
-            table = table + `\t\t<td>\n`;
-            table = table + `\t\t\t<a href="${socialMedia.shareUrl}">\n`
-            table = table + `\t\t\t\t<img src="${socialMedia.iconUrl}" height="48" width="48" alt="${socialMedia.site}"/>\n`
-            table = table + `\t\t\t</a>\n`;
-            table = table + `\t\t</td>\n`;
-        }
+        table = table + `\t\t<th>#</th>\n`;
+        table = table + `\t\t<th>Name</th>\n`;
+        table = table + `\t\t<th>Company</th>\n`;
+        table = table + `\t\t<th>Twitter Username</th>\n`;
+        table = table + `\t\t<th>Location</th>\n`;
+        table = table + `\t\t<th>Followers</th>\n`;
         table = table + `\t</tr>\n`;
+        for (const user of readCacheResponseModel.users) {
+            if(user.followers > 0 && index <= 256){
+                table = table + `\t<tr>\n`;
+                table = table + `\t\t<td>${index}</td>\n`;
+                table = table + `\t\t<td>\n`;
+                table = table + `\t\t\t<a href="https://github.com/${user.login}">\n`;
+                table = table + `\t\t\t\t<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.login}\n`;
+                table = table + `\t\t\t</a><br/>\n`;
+                table = table + `\t\t\t${formatMarkdown.getName(user.name)}\n`;
+                table = table + `\t\t</td>\n`;
+                table = table + `\t\t<td>${formatMarkdown.getCompany(user.company)}</td>\n`;
+                table = table + `\t\t<td>${formatMarkdown.getTwitterUsername(user.twitterUsername)}</td>\n`;
+                table = table + `\t\t<td>${user.location}</td>\n`;
+                table = table + `\t\t<td>${user.followers}</td>\n`;
+                table = table + `\t</tr>\n`;
+            }
+            index++;
+        }
         table = table + `</table>\n\n`;
         return table;
     }
-    let create = function (title, description, url) {
-        return createSocialMediaTable(
-            encodeURI(title),
-            encodeURI(description),
-            encodeURI(url));
+    let create = function (outputMarkdownModel) {
+        let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(outputMarkdownModel.locationDataModel.country);
+        let markdown = headerComponent.create(`Followers`, country);
+        markdown = markdown + `<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n\n`;
+        markdown = markdown + `The \`number of followers\` of users in ${country} on \`${formatMarkdown.getDate()}\`. `;
+        markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + shortcutMenuComponent.create(
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
+            outputMarkdownModel.locationDataModel.country,
+            2);
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + socialMediaComponent.create(
+            `Top GitHub Users By Followers in ${country}`,
+            "List of most active github users based on number of followers country or state",
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}/blob/main/markdown/followers/${formatMarkdown.getCountryName(outputMarkdownModel.locationDataModel.country)}.md`);
+        markdown = markdown + createUserTableByPublicContributions(outputMarkdownModel.readCacheResponseModel);
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + socialMediaComponent.create(
+            `Top GitHub Users By Followers in ${country}`,
+            `List of most active github users based on number of followers by ${country} or state`,
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}/blob/main/markdown/followers/${formatMarkdown.getCountryName(outputMarkdownModel.locationDataModel.country)}.md`);
+        markdown = markdown + thirdPartyComponent.create();
+        markdown = markdown + licenseComponent.create(outputMarkdownModel.githubUsernameAndRepository);
+        return markdown;
     }
     return {
         create: create,
     };
 })();
-module.exports = socialMediaMarkdown;
+module.exports = createFollowersPage;
+
+
+/***/ }),
+
+/***/ 2833:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const formatMarkdown = __nccwpck_require__(3164);
+const headerComponent = __nccwpck_require__(5091);
+const socialMediaComponent = __nccwpck_require__(8272);
+const thirdPartyComponent = __nccwpck_require__(6433);
+const licenseComponent = __nccwpck_require__(9805);
+let createIndexPage = (function () {
+    let createListOfCities = function (locationDataModel) {
+        let cities = ``;
+        for(const location of locationDataModel.locations) {
+            if(locationDataModel.country !== location) {
+                cities = cities + `\t\t\t<code>${formatMarkdown.capitalizeTheFirstLetterOfEachWord(location)}</code> \n`;
+            }
+        }
+        return cities;
+    }
+    let getNumberOfCities = function (readConfigResponseModel) {
+        let numberOfCities = 0;
+        for(const locationDataModel of readConfigResponseModel.locations) {
+            for (const location of locationDataModel.locations) {
+                if (locationDataModel.country !== location) {
+                    numberOfCities++;
+                }
+            }
+        }
+        return numberOfCities;
+    }
+    let createListOfCountriesAndCitiesTable = function (indexUrl, readConfigResponseModel) {
+        readConfigResponseModel.locations.sort((a,b) => a.country > b.country ? 1 : -1);
+        let table = `<table>\n`;
+        table = table + `\t<tr>\n`;
+        table = table + `\t\t<th>\n`;
+        table = table + `\t\t\tCountry/State\n`;
+        table = table + `\t\t</th>\n`;
+        table = table + `\t\t<th>\n`;
+        table = table + `\t\t\tCities\n`;
+        table = table + `\t\t</th>\n`;
+        table = table + `\t</tr>\n`;
+        for(const locationDataModel of readConfigResponseModel.locations) {
+            table = table + `\t<tr>\n`;
+            table = table + `\t\t<td>\n`;
+            table = table + `\t\t\t<a href="${indexUrl}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(locationDataModel.country)}.md">\n`;
+            table = table + `\t\t\t\t${formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country)}\n`;
+            table = table + `\t\t\t</a>\n`;
+            table = table + `\t\t</td>\n`;
+            table = table + `\t\t<td>\n`;
+            table = table + createListOfCities(locationDataModel);
+            table = table + `\t\t</td>\n`;
+            table = table + `\t</tr>\n`;
+        }
+        table = table + `</table>\n\n`;
+        return table;
+    }
+    let create = function (githubUsernameAndRepository, readConfigResponseModel) {
+        let markdown = headerComponent.create();
+        markdown = markdown + `<img align="right" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" alt="Sri Lanka">\n\n`;
+        markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
+        markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
+        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
+        markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
+        markdown = markdown + `The list can be found in [config.json](https://github.com/github-commits-top).\n\n`;
+        markdown = markdown + `The project maintained by [gayanvoice](github.com). `
+        markdown = markdown + `Don't forget to follow him on [GitHub](github.com), [Twitter](twitter.com), and [Medium](medium.com).\n\n`;
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + socialMediaComponent.create(
+            "Top GitHub Users By Country",
+            "List of most active github users based on public contributions, and number of followers by country or state",
+            `https://github.com/${githubUsernameAndRepository}`);
+        markdown = markdown + createListOfCountriesAndCitiesTable(
+            `https://github.com/${githubUsernameAndRepository}`,
+            readConfigResponseModel);
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + socialMediaComponent.create(
+            "Top GitHub Users By Country",
+            "List of most active github users based on public contributions, and number of followers by country or state",
+            `https://github.com/${githubUsernameAndRepository}`);
+        markdown = markdown + thirdPartyComponent.create();
+        markdown = markdown + licenseComponent.create(githubUsernameAndRepository);
+        return markdown;
+    }
+    return {
+        create: create,
+    };
+})();
+module.exports = createIndexPage;
+
+
+/***/ }),
+
+/***/ 4486:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const formatMarkdown = __nccwpck_require__(3164);
+const headerComponent = __nccwpck_require__(5091);
+const socialMediaComponent = __nccwpck_require__(8272);
+const shortcutMenuComponent = __nccwpck_require__(1049);
+const thirdPartyComponent = __nccwpck_require__(6433);
+const licenseComponent = __nccwpck_require__(9805);
+let createPublicContributionsPage = (function () {
+    let createUserTableByPublicContributions = function (readCacheResponseModel) {
+        readCacheResponseModel.users.sort((a, b) => parseFloat(b.publicContributions) - parseFloat(a.publicContributions));
+        let index = 1;
+        let table = `<table>\n`;
+        table = table + `\t<tr>\n`;
+        table = table + `\t\t<th>#</th>\n`;
+        table = table + `\t\t<th>Name</th>\n`;
+        table = table + `\t\t<th>Company</th>\n`;
+        table = table + `\t\t<th>Twitter Username</th>\n`;
+        table = table + `\t\t<th>Location</th>\n`;
+        table = table + `\t\t<th>Public Contributions</th>\n`;
+        table = table + `\t</tr>\n`;
+        for (const user of readCacheResponseModel.users) {
+            if(user.publicContributions > 0 && index <= 256){
+                table = table + `\t<tr>\n`;
+                table = table + `\t\t<td>${index}</td>\n`;
+                table = table + `\t\t<td>\n`;
+                table = table + `\t\t\t<a href="https://github.com/${user.login}">\n`;
+                table = table + `\t\t\t\t<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.login}\n`;
+                table = table + `\t\t\t</a><br/>\n`;
+                table = table + `\t\t\t${formatMarkdown.getName(user.name)}\n`;
+                table = table + `\t\t</td>\n`;
+                table = table + `\t\t<td>${formatMarkdown.getCompany(user.company)}</td>\n`;
+                table = table + `\t\t<td>${formatMarkdown.getTwitterUsername(user.twitterUsername)}</td>\n`;
+                table = table + `\t\t<td>${user.location}</td>\n`;
+                table = table + `\t\t<td>${user.publicContributions}</td>\n`;
+                table = table + `\t</tr>\n`;
+            }
+            index++;
+        }
+        table = table + `</table>\n\n`;
+        return table;
+    }
+    let create = function (outputMarkdownModel) {
+        let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(outputMarkdownModel.locationDataModel.country);
+        let markdown = headerComponent.create(`Public Contributions`, country);
+        markdown = markdown + `<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n\n`;
+        markdown = markdown + `The \`public contributions\` by users in ${country} on \`${formatMarkdown.getDate()}\`. `;
+        markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + shortcutMenuComponent.create(
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
+            outputMarkdownModel.locationDataModel.country,
+            0);
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + socialMediaComponent.create(
+            `Top GitHub Users By Public Contributions in ${country}`,
+            "List of most active github users based on public contributions country or state",
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(outputMarkdownModel.locationDataModel.country)}.md`);
+        markdown = markdown + createUserTableByPublicContributions(outputMarkdownModel.readCacheResponseModel);
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + socialMediaComponent.create(
+            `Top GitHub Users By Public Contributions in ${country}`,
+            `List of most active github users based on public contributions by ${country} or state`,
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(outputMarkdownModel.locationDataModel.country)}.md`);
+        markdown = markdown + thirdPartyComponent.create();
+        markdown = markdown + licenseComponent.create(outputMarkdownModel.githubUsernameAndRepository);
+        return markdown;
+    }
+    return {
+        create: create,
+    };
+})();
+module.exports = createPublicContributionsPage;
+
+
+/***/ }),
+
+/***/ 5389:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const formatMarkdown = __nccwpck_require__(3164);
+const headerComponent = __nccwpck_require__(5091);
+const socialMediaComponent = __nccwpck_require__(8272);
+const shortcutMenuComponent = __nccwpck_require__(1049);
+const thirdPartyComponent = __nccwpck_require__(6433);
+const licenseComponent = __nccwpck_require__(9805);
+let createTotalContributionsPage = (function () {
+    let createUserTableByPublicContributions = function (readCacheResponseModel) {
+        readCacheResponseModel.users.sort((a, b) => parseFloat(b.publicContributions + b.privateContributions) - parseFloat(a.publicContributions + a.privateContributions));
+        let index = 1;
+        let table = `<table>\n`;
+        table = table + `\t<tr>\n`;
+        table = table + `\t\t<th>#</th>\n`;
+        table = table + `\t\t<th>Name</th>\n`;
+        table = table + `\t\t<th>Company</th>\n`;
+        table = table + `\t\t<th>Twitter Username</th>\n`;
+        table = table + `\t\t<th>Location</th>\n`;
+        table = table + `\t\t<th>Public Contributions</th>\n`;
+        table = table + `\t\t<th>Total Contributions</th>\n`;
+        table = table + `\t</tr>\n`;
+        for (const user of readCacheResponseModel.users) {
+            if(user.publicContributions + user.privateContributions > 0 && index <= 256){
+                table = table + `\t<tr>\n`;
+                table = table + `\t\t<td>${index}</td>\n`;
+                table = table + `\t\t<td>\n`;
+                table = table + `\t\t\t<a href="https://github.com/${user.login}">\n`;
+                table = table + `\t\t\t\t<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.login}\n`;
+                table = table + `\t\t\t</a><br/>\n`;
+                table = table + `\t\t\t${formatMarkdown.getName(user.name)}\n`;
+                table = table + `\t\t</td>\n`;
+                table = table + `\t\t<td>${formatMarkdown.getCompany(user.company)}</td>\n`;
+                table = table + `\t\t<td>${formatMarkdown.getTwitterUsername(user.twitterUsername)}</td>\n`;
+                table = table + `\t\t<td>${user.location}</td>\n`;
+                table = table + `\t\t<td>${user.publicContributions}</td>\n`;
+                table = table + `\t\t<td>${user.publicContributions + user.privateContributions}</td>\n`;
+                table = table + `\t</tr>\n`;
+            }
+            index++;
+        }
+        table = table + `</table>\n\n`;
+        return table;
+    }
+    let create = function (outputMarkdownModel) {
+        let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(outputMarkdownModel.locationDataModel.country);
+        let markdown = headerComponent.create(`Total Contributions`, country);
+        markdown = markdown + `<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n\n`;
+        markdown = markdown + `The \`public contributions\` and \`private contributions\` by users in ${country} on \`${formatMarkdown.getDate()}\`. `;
+        markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + shortcutMenuComponent.create(
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
+            outputMarkdownModel.locationDataModel.country,
+            1);
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + socialMediaComponent.create(
+            `Top GitHub Users By Total Contributions in ${country}`,
+            "List of most active github users based on total contributions country or state",
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(outputMarkdownModel.locationDataModel.country)}.md`);
+        markdown = markdown + createUserTableByPublicContributions(outputMarkdownModel.readCacheResponseModel);
+        markdown = markdown + `### 🚀 Share on\n\n`;
+        markdown = markdown + socialMediaComponent.create(
+            `Top GitHub Users By Total Contributions in ${country}`,
+            `List of most active github users based on total contributions by ${country} or state`,
+            `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(outputMarkdownModel.locationDataModel.country)}.md`);
+        markdown = markdown + thirdPartyComponent.create();
+        markdown = markdown + licenseComponent.create(outputMarkdownModel.githubUsernameAndRepository);
+        return markdown;
+    }
+    return {
+        create: create,
+    };
+})();
+module.exports = createTotalContributionsPage;
 
 
 /***/ }),
@@ -13451,7 +13576,6 @@ let requestOctokit = function () {
                     console.log(userDataModel.login, userDataModel.followers)
                     array.push(userDataModel)
                 }
-                await setDelay(5000);
                 iterations ++;
             } else {
                 await setDelay(60000);
@@ -13479,89 +13603,62 @@ const configFile = __nccwpck_require__(6264);
 const outputCheckpoint = __nccwpck_require__(9911);
 const outputCache = __nccwpck_require__(9862);
 const outputMarkdown = __nccwpck_require__(8167);
-const createIndexMarkdown = __nccwpck_require__(9292);
-const createPublicContributionsMarkdown = __nccwpck_require__(7404);
-const createTotalContributionsMarkdown = __nccwpck_require__(5855);
-const createFollowersMarkdown = __nccwpck_require__(7937);
+const createIndexPage = __nccwpck_require__(2833);
+const createPublicContributionsPage = __nccwpck_require__(4486);
+const createTotalContributionsPage = __nccwpck_require__(5389);
+const createFollowersPage = __nccwpck_require__(5815);
 const requestOctokit = __nccwpck_require__(639);
+const OutputMarkdownModel = __nccwpck_require__(4343);
 let Index = function () {
     // const AUTH_KEY = "";
-    // const GITHUB_REPOSITORY = 'gayanvoice/github-commits-top';
+    // const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
-    const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY;
+    const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
     const MAXIMUM_ITERATIONS = 100;
-    const MAXIMUM_ERROR_ITERATIONS = 10;
+    const MAXIMUM_ERROR_ITERATIONS = 2;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
-        return indexOfTheCountry === checkpoint;
-    }
-    let getCountryAndUpdateCheckpoint = async function (locationsArray, country, checkpoint) {
-        let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
-        if (indexOfTheCountry === checkpoint) {
-            await outputCheckpoint.saveCheckpointFile(indexOfTheCountry, locationsArray.length)
+        if(indexOfTheCountry === checkpoint){
+            console.log("checkpoint set", country)
             return true;
         } else {
+            console.log("checkpoint not set", country)
             return false;
         }
     }
+    let updateCheckpoint = async function (locationsArray, country, checkpoint) {
+        let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
+        if (indexOfTheCountry === checkpoint) {
+            await outputCheckpoint.saveCheckpointFile(indexOfTheCountry, locationsArray.length)
+            console.log("checkpoint updated", country)
+        }
+    }
     let saveCache = async function (readConfigResponseModel, readCheckpointResponseModel) {
+        console.log(`########## SaveCache ##########`)
         for await(const locationDataModel of readConfigResponseModel.locations){
-            if(await getCheckpoint(
-                readConfigResponseModel.locations,
-                locationDataModel.country,
-                readCheckpointResponseModel.checkpoint)){
-                console.log("checkpoint set", locationDataModel.country)
-                let json = await requestOctokit.request(
-                    AUTH_KEY,
-                    MAXIMUM_ITERATIONS,
-                    MAXIMUM_ERROR_ITERATIONS,
-                    locationDataModel.locations);
+            let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint);
+            if(isCheckpoint){
+                let json = await requestOctokit.request(AUTH_KEY, MAXIMUM_ITERATIONS, MAXIMUM_ERROR_ITERATIONS, locationDataModel.locations);
                 await outputCache.saveCacheFile(locationDataModel.country, json);
-            } else {
-                console.log("checkpoint not set", locationDataModel.country)
             }
-
         }
     }
     let saveMarkdown = async function (readConfigResponseModel, readCheckpointResponseModel) {
-        await outputMarkdown.saveIndexMarkdownFile(createIndexMarkdown.create(GITHUB_REPOSITORY, readConfigResponseModel));
+        console.log(`########## SaveMarkDown ##########`)
         for await(const locationDataModel of readConfigResponseModel.locations){
-            if(await getCountryAndUpdateCheckpoint(
-                readConfigResponseModel.locations,
-                locationDataModel.country,
-                readCheckpointResponseModel.checkpoint)){
+            let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint)
+            if(isCheckpoint){
                 let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
-                console.log("checkpoint set", locationDataModel.country)
                 if(readCacheResponseModel.status) {
-                    console.log("cache file exists", locationDataModel.country)
-                    await outputMarkdown.savePublicContributionsMarkdownFile(
-                        locationDataModel.country,
-                        createPublicContributionsMarkdown.create(
-                            GITHUB_REPOSITORY,
-                            locationDataModel,
-                            readCacheResponseModel,
-                            readConfigResponseModel));
-                    await outputMarkdown.saveTotalContributionsMarkdownFile(
-                        locationDataModel.country,
-                        createTotalContributionsMarkdown.create(
-                            GITHUB_REPOSITORY,
-                            locationDataModel,
-                            readCacheResponseModel,
-                            readConfigResponseModel));
-                    await outputMarkdown.saveFollowersMarkdownFile(
-                        locationDataModel.country,
-                        createFollowersMarkdown.create(
-                            GITHUB_REPOSITORY,
-                            locationDataModel,
-                            readCacheResponseModel,
-                            readConfigResponseModel));
-                } else {
-                    console.log("cache file does not exist", locationDataModel.country)
+                    let outputMarkdownModel =  new OutputMarkdownModel(GITHUB_USERNAME_AND_REPOSITORY, locationDataModel, readCacheResponseModel, readConfigResponseModel);
+                    await outputMarkdown.savePublicContributionsMarkdownFile(locationDataModel.country, createPublicContributionsPage.create(outputMarkdownModel));
+                    await outputMarkdown.saveTotalContributionsMarkdownFile(locationDataModel.country, createTotalContributionsPage.create(outputMarkdownModel));
+                    await outputMarkdown.saveFollowersMarkdownFile(locationDataModel.country, createFollowersPage.create(outputMarkdownModel));
                 }
-            } else {
-                console.log("checkpoint not set", locationDataModel.country)
             }
+            await updateCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint)
         }
+        await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
     }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
@@ -13748,6 +13845,22 @@ let ReadFileResponseModel =  function (status, content) {
     if(status) this.content = content;
 }
 module.exports = ReadFileResponseModel;
+
+/***/ }),
+
+/***/ 4343:
+/***/ ((module) => {
+
+let OutputMarkdownModel = function (githubUsernameAndRepository,
+                                    locationDataModel,
+                                    readCacheResponseModel,
+                                    readConfigResponseModel) {
+    this.githubUsernameAndRepository = githubUsernameAndRepository;
+    this.locationDataModel = locationDataModel;
+    this.readCacheResponseModel = readCacheResponseModel;
+    this.readConfigResponseModel = readConfigResponseModel;
+}
+module.exports = OutputMarkdownModel;
 
 /***/ }),
 

@@ -32,7 +32,6 @@ let requestOctokit = function () {
                     console.log(userDataModel.login, userDataModel.followers)
                     array.push(userDataModel)
                 }
-                await setDelay(5000);
                 iterations ++;
             } else {
                 await setDelay(60000);
