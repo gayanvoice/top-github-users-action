@@ -12650,18 +12650,24 @@ module.exports = outputCache;
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const checkpointFile = __nccwpck_require__(5227);
+const CheckpointDataModel = __nccwpck_require__(9510);
 let outputCheckpoint = (function () {
-    let saveCheckpointFile = async function (index, length) {
-        let checkpoint;
-        if(index >= (length - 1)){
-            checkpoint = { checkpoint: 0 }
-        } else {
-            checkpoint = { checkpoint: index + 1 }
+    let saveCheckpointFile = async function (locationsArray, country, checkpoint) {
+        let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
+        if (indexOfTheCountry === checkpoint) {
+            console.log("checkpoint updated", country)
+            if(indexOfTheCountry >= locationsArray.length - 1){
+                await checkpointFile.outputCheckpointFile(new CheckpointDataModel(0));
+            } else {
+                await checkpointFile.outputCheckpointFile(new CheckpointDataModel(indexOfTheCountry + 1 ))
+            }
         }
-        await checkpointFile.outputCheckpointFile(checkpoint);
     }
     let readCheckpointFile = async function () {
         return await checkpointFile.readCheckpointFile();
+
+
+
     }
     return {
         saveCheckpointFile: saveCheckpointFile,
@@ -13350,9 +13356,9 @@ let createIndexPage = (function () {
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
         markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
         markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
-        markdown = markdown + `The list can be found in [config.json](https://github.com/github-commits-top).\n\n`;
-        markdown = markdown + `The project maintained by [gayanvoice](github.com). `
-        markdown = markdown + `Don't forget to follow him on [GitHub](github.com), [Twitter](twitter.com), and [Medium](medium.com).\n\n`;
+        markdown = markdown + `The list can be found in [config.json](https://github.com/${githubUsernameAndRepository}/blob/main/config.json).\n\n`;
+        markdown = markdown + `The project maintained by [gayanvoice](https://github.com/${githubUsernameAndRepository}). `
+        markdown = markdown + `Don't forget to follow him on [GitHub](https://github.com/${githubUsernameAndRepository}), [Twitter](https://twitter.com/gayanvoice), and [Medium](https://gayanvoice.medium.com/).\n\n`;
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + socialMediaComponent.create(
             "Top GitHub Users By Country",
@@ -13626,13 +13632,6 @@ let Index = function () {
             return false;
         }
     }
-    let updateCheckpoint = async function (locationsArray, country, checkpoint) {
-        let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
-        if (indexOfTheCountry === checkpoint) {
-            await outputCheckpoint.saveCheckpointFile(indexOfTheCountry, locationsArray.length)
-            console.log("checkpoint updated", country)
-        }
-    }
     let saveCache = async function (readConfigResponseModel, readCheckpointResponseModel) {
         console.log(`########## SaveCache ##########`)
         for await(const locationDataModel of readConfigResponseModel.locations){
@@ -13656,7 +13655,7 @@ let Index = function () {
                     await outputMarkdown.saveFollowersMarkdownFile(locationDataModel.country, createFollowersPage.create(outputMarkdownModel));
                 }
             }
-            await updateCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint)
+            await outputCheckpoint.saveCheckpointFile(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint)
         }
         await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
     }
@@ -13781,6 +13780,16 @@ let ReadConfigResponseModel =  function (status, content) {
     if(status) this.checkpoint = content.checkpoint;
 }
 module.exports = ReadConfigResponseModel;
+
+/***/ }),
+
+/***/ 9510:
+/***/ ((module) => {
+
+let CheckpointDataModel = function (checkpoint) {
+    this.checkpoint = checkpoint;
+}
+module.exports = CheckpointDataModel;
 
 /***/ }),
 

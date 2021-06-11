@@ -28,13 +28,6 @@ let Index = function () {
             return false;
         }
     }
-    let updateCheckpoint = async function (locationsArray, country, checkpoint) {
-        let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
-        if (indexOfTheCountry === checkpoint) {
-            await outputCheckpoint.saveCheckpointFile(indexOfTheCountry, locationsArray.length)
-            console.log("checkpoint updated", country)
-        }
-    }
     let saveCache = async function (readConfigResponseModel, readCheckpointResponseModel) {
         console.log(`########## SaveCache ##########`)
         for await(const locationDataModel of readConfigResponseModel.locations){
@@ -58,7 +51,7 @@ let Index = function () {
                     await outputMarkdown.saveFollowersMarkdownFile(locationDataModel.country, createFollowersPage.create(outputMarkdownModel));
                 }
             }
-            await updateCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint)
+            await outputCheckpoint.saveCheckpointFile(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint)
         }
         await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
     }
