@@ -12706,7 +12706,6 @@ let cacheFile = (function () {
 })();
 module.exports = cacheFile;
 
-
 /***/ }),
 
 /***/ 5227:
@@ -12739,7 +12738,6 @@ let checkpointFile = (function () {
 })();
 module.exports = checkpointFile;
 
-
 /***/ }),
 
 /***/ 6264:
@@ -12765,6 +12763,36 @@ module.exports = configFile;
 
 /***/ }),
 
+/***/ 8769:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const file = __nccwpck_require__(6990);
+let htmlFile = function () {
+    let outputHtmlFile = async function (fileName, html) {
+        let outputFileResponseModel = await file.outputOther(fileName, html);
+        if(outputFileResponseModel.status){
+            console.log(outputFileResponseModel.message)
+        } else {
+            console.log(outputFileResponseModel.message)
+        }
+    }
+    let outputJsonFile = async function (fileName, json) {
+        let outputFileResponseModel = await file.outputJson(fileName, json);
+        if(outputFileResponseModel.status){
+            console.log(outputFileResponseModel.message)
+        } else {
+            console.log(outputFileResponseModel.message)
+        }
+    }
+    return {
+        outputHtmlFile: outputHtmlFile,
+        outputJsonFile: outputJsonFile
+    };
+}();
+module.exports = htmlFile;
+
+/***/ }),
+
 /***/ 2025:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -12783,7 +12811,6 @@ let markdownFile = (function () {
     };
 })();
 module.exports = markdownFile;
-
 
 /***/ }),
 
@@ -12850,6 +12877,107 @@ let pushGit = function () {
     };
 }();
 module.exports = pushGit;
+
+/***/ }),
+
+/***/ 8900:
+/***/ ((module) => {
+
+let createHtmlFile = (function () {
+    let create = function () {
+        let html = `<!DOCTYPE html>\n`;
+        html = html + `<html>\n`;
+        html = html + `\t<head>\n`;
+        html = html + `\t\t<title>Title</title>\n`;
+        html = html + `\t\t<link rel="stylesheet" href="../public/css/styles.css">\n`;
+        html = html + `\t\t<script src="../public/javascript/chart.min.js"></script>\n`;
+        html = html + `\t\t<script src="../public/javascript/index.umd.min.js"></script>\n`;
+        html = html + `\t\t<script src="../public/javascript/graph.js"></script>\n`;
+        html = html + `\t\t<script src="../public/javascript/resizeCanvas.js"></script>\n`;
+        html = html + `\t</head>\n`;
+        html = html + `\t<body>\n`;
+        html = html + `\t<div class="header">\n`;
+        html = html + `\t\t<div class="description">\n`;
+        html = html + `\t\t\t<strong>Total Public Contributions on GitHub</strong>\n`;
+        html = html + `\t\t</div>\n`;
+        html = html + `\t</div>\n`;
+        html = html + `\t<div class="canvas">\n`;
+        html = html + `\t\t<canvas id="canvas"></canvas>\n`;
+        html = html + `\t</div>\n`;
+        html = html + `\t<div class="footer">\n`;
+        html = html + `\t\t<div class="description">\n`;
+        html = html + `\t\t\tList of most active GitHub users based on public contributions by country.\n`;
+        html = html + `\t\t\tGo to repository <a href="https://github.com/gayanvoice/top-github-users">gayanvoice/top-github-users</a>\n`;
+        html = html + `\t\t</div>\n`;
+        html = html + `\t</div>\n`;
+        html = html + `\t<script type="application/javascript">\n`;
+        html = html + `\t\tresizeCanvas()\n`;
+        html = html + `\t</script>\n`;
+        html = html + `\t</body>\n`;
+        html = html + `</html>`
+        return html;
+    }
+    return {
+        create: create,
+    };
+})();
+module.exports = createHtmlFile;
+
+/***/ }),
+
+/***/ 7818:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const formatMarkdown = __nccwpck_require__(3164);
+const outputCache = __nccwpck_require__(9862);
+let createRankingJsonFile = (function () {
+    let create = async function (readConfigResponseModel) {
+        let countriesArray = [];
+        for await(const locationDataModel of readConfigResponseModel.locations){
+            let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
+            let totalContributions = 0;
+            if(readCacheResponseModel.status) {
+                for(const user of readCacheResponseModel.users){
+                    totalContributions = totalContributions + (user.publicContributions + user.privateContributions);
+                }
+                countriesArray.push({ name: formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country), value: totalContributions})
+            }
+        }
+        return { ranking: countriesArray};
+    }
+    return {
+        create: create,
+    };
+})();
+module.exports = createRankingJsonFile;
+
+/***/ }),
+
+/***/ 9316:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const htmlFile = __nccwpck_require__(8769);
+let outputHtml = (function () {
+    const HTML_FILE = "index.html";
+    const RANKING_FILE = "ranking.json"
+    let setHtmlFilePath = function () {
+        return `docs/${HTML_FILE}`;
+    }
+    let setRankingJsonFilePath = function () {
+        return `docs/${RANKING_FILE}`;
+    }
+    let saveHtmlFile = async function (html) {
+        await htmlFile.outputHtmlFile(setHtmlFilePath(), html);
+    }
+    let saveRankingJsonFile = async function (json) {
+        await htmlFile.outputJsonFile(setRankingJsonFilePath(), json);
+    }
+    return {
+        saveHtmlFile: saveHtmlFile,
+        saveRankingJsonFile: saveRankingJsonFile
+    };
+})();
+module.exports = outputHtml;
 
 /***/ }),
 
@@ -13591,6 +13719,12 @@ module.exports = requestOctokit;
 /***/ 4351:
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __nccwpck_require__) => {
 
+/*!
+ * top-github-users-monitor 1.0.0
+ * https://github.com/gayanvoice/top-github-users-monitor
+ * (c) 2021 gayanvoice
+ * Released under the MIT License
+ */
 const pullGit = __nccwpck_require__(8591);
 const commitGit = __nccwpck_require__(6763);
 const pushGit = __nccwpck_require__(6278);
@@ -13598,6 +13732,9 @@ const configFile = __nccwpck_require__(6264);
 const outputCheckpoint = __nccwpck_require__(9911);
 const outputCache = __nccwpck_require__(9862);
 const outputMarkdown = __nccwpck_require__(8167);
+const outputHtml = __nccwpck_require__(9316);
+const createHtmlFile = __nccwpck_require__(8900);
+const createRankingJsonFile = __nccwpck_require__(7818);
 const createIndexPage = __nccwpck_require__(2833);
 const createPublicContributionsPage = __nccwpck_require__(4486);
 const createTotalContributionsPage = __nccwpck_require__(5389);
@@ -13648,6 +13785,11 @@ let Index = function () {
         }
         if(!readConfigResponseModel.devMode) await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
     }
+    let saveHtml = async function (readConfigResponseModel) {
+        console.log(`########## SaveHtml ##########`);
+        await outputHtml.saveRankingJsonFile(await createRankingJsonFile.create(readConfigResponseModel));
+        await outputHtml.saveHtmlFile(createHtmlFile.create());
+    }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
         let readCheckpointResponseModel = await outputCheckpoint.readCheckpointFile();
@@ -13655,6 +13797,7 @@ let Index = function () {
             if(!readConfigResponseModel.devMode) await pullGit.pull();
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
+            await saveHtml(readConfigResponseModel)
             if(!readConfigResponseModel.devMode) await commitGit.commit("Update users");
             if(!readConfigResponseModel.devMode) await pushGit.push();
         }

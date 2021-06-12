@@ -1,3 +1,9 @@
+/*!
+ * top-github-users-monitor 1.0.0
+ * https://github.com/gayanvoice/top-github-users-monitor
+ * (c) 2021 gayanvoice
+ * Released under the MIT License
+ */
 const pullGit = require('./helper/git/pull-git');
 const commitGit = require('./helper/git/commit-git');
 const pushGit = require('./helper/git/push-git');
@@ -5,6 +11,9 @@ const configFile = require('./helper/file/config_file');
 const outputCheckpoint = require('./helper/checkpoint/output_checkpoint');
 const outputCache = require('./helper/cache/output_cache');
 const outputMarkdown = require('./helper/markdown/output_markdown');
+const outputHtml = require('./helper/html/output_html');
+const createHtmlFile = require('./helper/html/file/create_html_file');
+const createRankingJsonFile = require('./helper/html/file/create_ranking_json_file');
 const createIndexPage = require('./helper/markdown/page/create_index_page');
 const createPublicContributionsPage = require('./helper/markdown/page/create_public_contributions_page');
 const createTotalContributionsPage = require('./helper/markdown/page/create_total_contributions_page');
@@ -55,6 +64,11 @@ let Index = function () {
         }
         if(!readConfigResponseModel.devMode) await outputMarkdown.saveIndexMarkdownFile(createIndexPage.create(GITHUB_USERNAME_AND_REPOSITORY, readConfigResponseModel));
     }
+    let saveHtml = async function (readConfigResponseModel) {
+        console.log(`########## SaveHtml ##########`);
+        await outputHtml.saveRankingJsonFile(await createRankingJsonFile.create(readConfigResponseModel));
+        await outputHtml.saveHtmlFile(createHtmlFile.create());
+    }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
         let readCheckpointResponseModel = await outputCheckpoint.readCheckpointFile();
@@ -62,6 +76,7 @@ let Index = function () {
             if(!readConfigResponseModel.devMode) await pullGit.pull();
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
+            await saveHtml(readConfigResponseModel)
             if(!readConfigResponseModel.devMode) await commitGit.commit("Update users");
             if(!readConfigResponseModel.devMode) await pushGit.push();
         }
