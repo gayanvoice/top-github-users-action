@@ -52,7 +52,7 @@ let createIndexPage = (function () {
     }
     let create = function (githubUsernameAndRepository, readConfigResponseModel) {
         let markdown = headerComponent.create();
-        markdown = markdown + `<img align="right" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" alt="Sri Lanka">\n\n`;
+        markdown = markdown + `<img align="right" width="200" src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/images/banner/top-github-users-map.png" alt="Sri Lanka">\n\n`;
         markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
         markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;

@@ -13098,57 +13098,57 @@ let socialMediaComponent = (function () {
             {
                 site: `Facebook`,
                 shareUrl: `https://web.facebook.com/${facebookPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook.svg`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/public/images/icons/facebook.svg`,
             },
             {
                 site: `Facebook Messenger`,
                 shareUrl: `https://www.facebook.com/dialog/${facebookMessengerPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/facebook_messenger.svg`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/public/images/icons/facebook_messenger.svg`,
             },
             {
                 site: `Twitter`,
                 shareUrl: `https://twitter.com/intent/${twitterPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/images/icons/twitter.svg`
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/raw/master/public/images/icons/twitter.svg`
             },
             {
                 site: `WhatsApp`,
                 shareUrl: `https://web.whatsapp.com/${whatsAppPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/whatsapp.svg`
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/public/images/icons/whatsapp.svg`
             },
             {
                 site: `Telegram`,
                 shareUrl: `https://t.me/share/${telegramPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/telegram.svg`
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/public/images/icons/telegram.svg`
             },
             {
                 site: `LinkedIn`,
                 shareUrl: `https://www.linkedin.com/${linkedInPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/linkedin.svg`
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/public/images/icons/linkedin.svg`
             },
             {
                 site: `Vkontakte`,
                 shareUrl: `https://vk.com/${vkontaktePost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/vkontakte.svg`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/public/images/icons/vkontakte.svg`,
             },
             {
                 site: `Blogger`,
                 shareUrl: `https://www.blogger.com/${bloggerPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/blogger.svg`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/public/images/icons/blogger.svg`,
             },
             {
                 site: `Wordpress`,
                 shareUrl: `https://wordpress.com/wp-admin/${wordpressPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/wordpress.svg`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/public/images/icons/wordpress.svg`,
             },
             {
                 site: `Email`,
                 shareUrl: `mailto:recipient ${email}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/gmail.svg`
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/public/images/icons/gmail.svg`
             },
             {
                 site: `Reddit`,
                 shareUrl: `https://www.reddit.com/${redditPost}`,
-                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/images/icons/reddit.svg`,
+                iconUrl: `https://github.com/gayanvoice/github-active-users-monitor/blob/master/public/images/icons/reddit.svg`,
             }
         ];
         let table = `<table>\n`;
@@ -13471,7 +13471,7 @@ let createIndexPage = (function () {
     }
     let create = function (githubUsernameAndRepository, readConfigResponseModel) {
         let markdown = headerComponent.create();
-        markdown = markdown + `<img align="right" width="200" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Sri_Lanka.svg/800px-Flag_of_Sri_Lanka.svg.png" alt="Sri Lanka">\n\n`;
+        markdown = markdown + `<img align="right" width="200" src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/images/banner/top-github-users-map.png" alt="Sri Lanka">\n\n`;
         markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
         markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
