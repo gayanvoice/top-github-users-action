@@ -12624,7 +12624,7 @@ module.exports = octokit;
 const cacheFile = __nccwpck_require__(845);
 let outputCache = (function () {
     let getCountryName = function (country) {
-        return country.replaceAll(' ', '_').toLowerCase();
+        return country.replace(/\s/g, '_').toLowerCase();
     }
     let getPath = function (country) {
         let fileName = getCountryName(country)
