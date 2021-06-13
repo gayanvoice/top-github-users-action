@@ -13793,12 +13793,14 @@ let Index = function () {
         await outputHtml.saveHtmlFile(createHtmlFile.create());
     }
     let getCommitMessage = async function (readConfigResponseModel, readCheckpointResponseModel) {
+        let message;
         for await(const locationDataModel of readConfigResponseModel.locations){
             let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint - 1);
             if(isCheckpoint){
-                return `Update ${locationDataModel.country}`
+                message =  `Update ${locationDataModel.country}`
             }
         }
+        return message;
     }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
@@ -13808,6 +13810,7 @@ let Index = function () {
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
             await saveHtml(readConfigResponseModel)
+            console.log(await getCommitMessage(readConfigResponseModel, readCheckpointResponseModel))
             if(!readConfigResponseModel.devMode) await commitGit.commit(getCommitMessage(readConfigResponseModel, readCheckpointResponseModel));
             if(!readConfigResponseModel.devMode) await pushGit.push();
         }
