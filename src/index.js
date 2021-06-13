@@ -87,8 +87,7 @@ let Index = function () {
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
             await saveHtml(readConfigResponseModel)
-            console.log(await getCommitMessage(readConfigResponseModel, readCheckpointResponseModel))
-            if(!readConfigResponseModel.devMode) await commitGit.commit(getCommitMessage(readConfigResponseModel, readCheckpointResponseModel));
+            if(!readConfigResponseModel.devMode) await commitGit.commit(await getCommitMessage(readConfigResponseModel, readCheckpointResponseModel));
             if(!readConfigResponseModel.devMode) await pushGit.push();
         }
     }
