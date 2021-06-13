@@ -12889,11 +12889,11 @@ let createHtmlFile = (function () {
         html = html + `<html>\n`;
         html = html + `\t<head>\n`;
         html = html + `\t\t<title>Total Public Contributions in GitHub by Country</title>\n`;
-        html = html + `\t\t<link rel="stylesheet" href="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/css/styles.css">\n`;
-        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/javascript/chart.min.js"></script>\n`;
-        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/javascript/index.umd.min.js"></script>\n`;
-        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/javascript/graph.js"></script>\n`;
-        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/javascript/resizeCanvas.js"></script>\n`;
+        html = html + `\t\t<link rel="stylesheet" href="./css/styles.css">\n`;
+        html = html + `\t\t<script src="./javascript/chart.min.js"></script>\n`;
+        html = html + `\t\t<script src="./javascript/index.umd.min.js"></script>\n`;
+        html = html + `\t\t<script src="./javascript/graph.js"></script>\n`;
+        html = html + `\t\t<script src="./javascript/resizeCanvas.js"></script>\n`;
         html = html + `\t</head>\n`;
         html = html + `\t<body>\n`;
         html = html + `\t<div class="header">\n`;
