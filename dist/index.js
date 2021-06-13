@@ -12889,11 +12889,11 @@ let createHtmlFile = (function () {
         html = html + `<html>\n`;
         html = html + `\t<head>\n`;
         html = html + `\t\t<title>Total Public Contributions in GitHub by Country</title>\n`;
-        html = html + `\t\t<link rel="stylesheet" href="https://github.com/gayanvoice/top-github-users-monitor/blob/master/public/css/styles.css">\n`;
-        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/blob/master/public/javascript/chart.min.js"></script>\n`;
-        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/blob/master/public/javascript/index.umd.min.js"></script>\n`;
-        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/blob/master/public/javascript/graph.js"></script>\n`;
-        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/blob/master/public/javascript/resizeCanvas.js"></script>\n`;
+        html = html + `\t\t<link rel="stylesheet" href="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/css/styles.css">\n`;
+        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/javascript/chart.min.js"></script>\n`;
+        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/javascript/index.umd.min.js"></script>\n`;
+        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/javascript/graph.js"></script>\n`;
+        html = html + `\t\t<script src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/javascript/resizeCanvas.js"></script>\n`;
         html = html + `\t</head>\n`;
         html = html + `\t<body>\n`;
         html = html + `\t<div class="header">\n`;
@@ -13742,6 +13742,7 @@ const createPublicContributionsPage = __nccwpck_require__(4486);
 const createTotalContributionsPage = __nccwpck_require__(5389);
 const createFollowersPage = __nccwpck_require__(5815);
 const requestOctokit = __nccwpck_require__(639);
+const formatMarkdown = __nccwpck_require__(3164);
 const OutputMarkdownModel = __nccwpck_require__(4343);
 let Index = function () {
     // const AUTH_KEY = "";
@@ -13792,25 +13793,16 @@ let Index = function () {
         await outputHtml.saveRankingJsonFile(await createRankingJsonFile.create(readConfigResponseModel));
         await outputHtml.saveHtmlFile(createHtmlFile.create());
     }
-    let getCommitMessage = async function (readConfigResponseModel, readCheckpointResponseModel) {
-        let message;
-        for await(const locationDataModel of readConfigResponseModel.locations){
-            let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint - 1);
-            if(isCheckpoint){
-                message =  `Update ${locationDataModel.country}`
-            }
-        }
-        return message;
-    }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
         let readCheckpointResponseModel = await outputCheckpoint.readCheckpointFile();
         if(readConfigResponseModel.status && readCheckpointResponseModel.status){
             if(!readConfigResponseModel.devMode) await pullGit.pull();
+            let checkpointCountry = readConfigResponseModel.locations[readCheckpointResponseModel.checkpoint].country
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
             await saveHtml(readConfigResponseModel)
-            if(!readConfigResponseModel.devMode) await commitGit.commit(await getCommitMessage(readConfigResponseModel, readCheckpointResponseModel));
+            if(!readConfigResponseModel.devMode) await commitGit.commit(`Update ${formatMarkdown.capitalizeTheFirstLetterOfEachWord(checkpointCountry)}`);
             if(!readConfigResponseModel.devMode) await pushGit.push();
         }
     }

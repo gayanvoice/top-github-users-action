@@ -19,6 +19,7 @@ const createPublicContributionsPage = require('./helper/markdown/page/create_pub
 const createTotalContributionsPage = require('./helper/markdown/page/create_total_contributions_page');
 const createFollowersPage = require('./helper/markdown/page/create_followers_page');
 const requestOctokit = require('./helper/octokit/request_octokit');
+const formatMarkdown = require('./helper/markdown/format_markdown');
 const OutputMarkdownModel = require('./model/markdown/OutputMarkdownModel');
 let Index = function () {
     // const AUTH_KEY = "";
@@ -69,25 +70,16 @@ let Index = function () {
         await outputHtml.saveRankingJsonFile(await createRankingJsonFile.create(readConfigResponseModel));
         await outputHtml.saveHtmlFile(createHtmlFile.create());
     }
-    let getCommitMessage = async function (readConfigResponseModel, readCheckpointResponseModel) {
-        let message;
-        for await(const locationDataModel of readConfigResponseModel.locations){
-            let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint - 1);
-            if(isCheckpoint){
-                message =  `Update ${locationDataModel.country}`
-            }
-        }
-        return message;
-    }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
         let readCheckpointResponseModel = await outputCheckpoint.readCheckpointFile();
         if(readConfigResponseModel.status && readCheckpointResponseModel.status){
             if(!readConfigResponseModel.devMode) await pullGit.pull();
+            let checkpointCountry = readConfigResponseModel.locations[readCheckpointResponseModel.checkpoint].country
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
             await saveHtml(readConfigResponseModel)
-            if(!readConfigResponseModel.devMode) await commitGit.commit(await getCommitMessage(readConfigResponseModel, readCheckpointResponseModel));
+            if(!readConfigResponseModel.devMode) await commitGit.commit(`Update ${formatMarkdown.capitalizeTheFirstLetterOfEachWord(checkpointCountry)}`);
             if(!readConfigResponseModel.devMode) await pushGit.push();
         }
     }
