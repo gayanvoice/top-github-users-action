@@ -1,7 +1,7 @@
 const cacheFile = require('../../helper/file/cache_file');
 let outputCache = (function () {
     let getCountryName = function (country) {
-        return country.replace(' ', '_').toLowerCase();
+        return country.replaceAll(' ', '_').toLowerCase();
     }
     let getPath = function (country) {
         let fileName = getCountryName(country)
