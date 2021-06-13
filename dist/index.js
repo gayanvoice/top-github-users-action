@@ -13471,7 +13471,9 @@ let createIndexPage = (function () {
     }
     let create = function (githubUsernameAndRepository, readConfigResponseModel) {
         let markdown = headerComponent.create();
-        markdown = markdown + `<img align="right" width="200" src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/images/banner/top-github-users-map.png" alt="Sri Lanka">\n\n`;
+        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">`;
+        markdown = markdown + `<img align="right" width="400" src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/images/banner/top-github-users-map.png" alt="top-github-users-by-country">\n\n`;
+        markdown = markdown + `</a>`;
         markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
         markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
@@ -13746,7 +13748,7 @@ let Index = function () {
     // const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
-    const MAXIMUM_ITERATIONS = 100;
+    const MAXIMUM_ITERATIONS = 10;
     const MAXIMUM_ERROR_ITERATIONS = 4;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
@@ -13790,6 +13792,14 @@ let Index = function () {
         await outputHtml.saveRankingJsonFile(await createRankingJsonFile.create(readConfigResponseModel));
         await outputHtml.saveHtmlFile(createHtmlFile.create());
     }
+    let getCommitMessage = async function (readConfigResponseModel, readCheckpointResponseModel) {
+        for await(const locationDataModel of readConfigResponseModel.locations){
+            let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint - 1);
+            if(isCheckpoint){
+                return `Update ${locationDataModel.country}`
+            }
+        }
+    }
     let main = async function () {
         let readConfigResponseModel = await configFile.readConfigFile();
         let readCheckpointResponseModel = await outputCheckpoint.readCheckpointFile();
@@ -13798,7 +13808,7 @@ let Index = function () {
             await saveCache(readConfigResponseModel, readCheckpointResponseModel);
             await saveMarkdown(readConfigResponseModel, readCheckpointResponseModel)
             await saveHtml(readConfigResponseModel)
-            if(!readConfigResponseModel.devMode) await commitGit.commit("Update users");
+            if(!readConfigResponseModel.devMode) await commitGit.commit(getCommitMessage(readConfigResponseModel, readCheckpointResponseModel));
             if(!readConfigResponseModel.devMode) await pushGit.push();
         }
     }
