@@ -13679,8 +13679,11 @@ let requestOctokit = function () {
         }
         return query;
     }
+    function randomIntFromInterval(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min)
+    }
     const setDelay = function(timeout){
-        console.log(`delay seconds ${timeout}`)
+        console.log(`delay ${timeout} ms`)
         return new Promise(res => setTimeout(res, timeout));
     }
     let request = async function (AUTH_KEY,
@@ -13701,6 +13704,7 @@ let requestOctokit = function () {
                     console.log(userDataModel.login, userDataModel.followers)
                     array.push(userDataModel)
                 }
+                await setDelay(randomIntFromInterval(1000, 5000));
                 iterations ++;
             } else {
                 await setDelay(60000);
