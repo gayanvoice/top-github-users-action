@@ -13898,7 +13898,7 @@ let ReadConfigResponseModel =  function (status, content) {
                         array.push(city)
                     }
                 }
-                locationArray.push(new LocationDataModel(country, array, imageUrl))
+                locationArray.push(new LocationDataModel(country, geoName, array, imageUrl))
             }
         }
         return locationArray;
