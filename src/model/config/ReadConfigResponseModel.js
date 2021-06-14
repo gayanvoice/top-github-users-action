@@ -14,6 +14,7 @@ let ReadConfigResponseModel =  function (status, content) {
         let locationArray = [];
         for (const location of locations) {
             let country = location.country;
+            let geoName = location.geoName;
             let imageUrl = location.imageUrl;
             if(validate(country)) {
                 let array = [];

@@ -4,13 +4,22 @@ let createRankingJsonFile = (function () {
     let create = async function (readConfigResponseModel) {
         let countriesArray = [];
         for await(const locationDataModel of readConfigResponseModel.locations){
-            let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
-            let totalContributions = 0;
-            if(readCacheResponseModel.status) {
-                for(const user of readCacheResponseModel.users){
-                    totalContributions = totalContributions + (user.publicContributions + user.privateContributions);
+            if(locationDataModel.geoName === undefined){
+                console.log(`Ranking not available for ${locationDataModel.country}`)
+            } else {
+                console.log(`Ranking available for ${locationDataModel.country}`)
+                let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
+                let totalPublicContributions = 0;
+                if(readCacheResponseModel.status) {
+                    for(const user of readCacheResponseModel.users){
+                        if(user.publicContributions > 10000){
+                            totalPublicContributions = totalPublicContributions + 10000;
+                        } else {
+                            totalPublicContributions = totalPublicContributions + (user.publicContributions);
+                        }
+                    }
+                    countriesArray.push({ name: formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.geoName), value: totalPublicContributions})
                 }
-                countriesArray.push({ name: formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country), value: totalContributions})
             }
         }
         return { ranking: countriesArray};

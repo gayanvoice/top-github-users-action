@@ -21,9 +21,9 @@ let file = (function () {
     let readJson = async function (fileName) {
         try {
             let json = await fs.readJson(fileName);
-            return new ReadFileResponseModel(true, json);
+            return new ReadFileResponseModel(true, `Json file has been read at ${fileName}`, json);
         } catch (error) {
-            return new ReadFileResponseModel(false);
+            return new ReadFileResponseModel(false, `Json file has not been read at ${fileName}`);
         }
     }
     return {

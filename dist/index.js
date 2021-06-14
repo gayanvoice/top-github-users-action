@@ -12503,9 +12503,9 @@ let file = (function () {
     let readJson = async function (fileName) {
         try {
             let json = await fs.readJson(fileName);
-            return new ReadFileResponseModel(true, json);
+            return new ReadFileResponseModel(true, `Json file has been read at ${fileName}`, json);
         } catch (error) {
-            return new ReadFileResponseModel(false);
+            return new ReadFileResponseModel(false, `Json file has not been read at ${fileName}`);
         }
     }
     return {
@@ -12683,19 +12683,14 @@ const ReadCacheResponseModel = __nccwpck_require__(128);
 let cacheFile = (function () {
     let outputCacheFile = async function (fileName, json) {
         let outputFileResponseModel = await file.outputJson(fileName, json);
-        if(outputFileResponseModel.status){
-            console.log(outputFileResponseModel.message)
-        } else {
-            console.log(outputFileResponseModel.message)
-        }
+        console.log(outputFileResponseModel.message)
     }
     let readCacheFile = async function (fileName) {
         let readFileResponseModel = await file.readJson(fileName);
+        console.log(readFileResponseModel.message)
         if(readFileResponseModel.status){
-            console.log("cache file exists", fileName)
             return new ReadCacheResponseModel(readFileResponseModel.status, readFileResponseModel.content)
         } else {
-            console.log("cache file does not exist", fileName)
             return new ReadCacheResponseModel(readFileResponseModel.status)
         }
     }
@@ -12717,14 +12712,11 @@ let checkpointFile = (function () {
     const path = 'checkpoint.json';
     let outputCheckpointFile = async function (json) {
         let outputFileResponseModel = await file.outputJson(path, json);
-        if(outputFileResponseModel.status){
-            console.log(outputFileResponseModel.message)
-        } else {
-            console.log(outputFileResponseModel.message)
-        }
+        console.log(outputFileResponseModel.message)
     }
     let readCheckpointFile = async function () {
         let readFileResponseModel = await file.readJson(path);
+        console.log(readFileResponseModel.message)
         if(readFileResponseModel.status){
             return new ReadCheckpointResponseModel(readFileResponseModel.status, readFileResponseModel.content);
         } else {
@@ -12749,6 +12741,7 @@ let configFile = (function () {
     const path = 'config.json';
     let readConfigFile = async function () {
         let readFileResponseModel = await file.readJson(path);
+        console.log(readFileResponseModel.message)
         if(readFileResponseModel.status){
             return new ReadConfigResponseModel(readFileResponseModel.status, readFileResponseModel.content);
         } else {
@@ -12770,19 +12763,11 @@ const file = __nccwpck_require__(6990);
 let htmlFile = function () {
     let outputHtmlFile = async function (fileName, html) {
         let outputFileResponseModel = await file.outputOther(fileName, html);
-        if(outputFileResponseModel.status){
-            console.log(outputFileResponseModel.message)
-        } else {
-            console.log(outputFileResponseModel.message)
-        }
+        console.log(outputFileResponseModel.message)
     }
     let outputJsonFile = async function (fileName, json) {
         let outputFileResponseModel = await file.outputJson(fileName, json);
-        if(outputFileResponseModel.status){
-            console.log(outputFileResponseModel.message)
-        } else {
-            console.log(outputFileResponseModel.message)
-        }
+        console.log(outputFileResponseModel.message)
     }
     return {
         outputHtmlFile: outputHtmlFile,
@@ -12800,11 +12785,7 @@ const file = __nccwpck_require__(6990);
 let markdownFile = (function () {
     let outputMarkdownFile = async function (fileName, markdown) {
         let outputFileResponseModel = await file.outputOther(fileName, markdown);
-        if(outputFileResponseModel.status){
-            console.log(outputFileResponseModel.message)
-        } else {
-            console.log(outputFileResponseModel.message)
-        }
+        console.log(outputFileResponseModel.message)
     }
     return {
         outputMarkdownFile: outputMarkdownFile,
@@ -12934,13 +12915,22 @@ let createRankingJsonFile = (function () {
     let create = async function (readConfigResponseModel) {
         let countriesArray = [];
         for await(const locationDataModel of readConfigResponseModel.locations){
-            let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
-            let totalContributions = 0;
-            if(readCacheResponseModel.status) {
-                for(const user of readCacheResponseModel.users){
-                    totalContributions = totalContributions + (user.publicContributions + user.privateContributions);
+            if(locationDataModel.geoName === undefined){
+                console.log(`Ranking not available for ${locationDataModel.country}`)
+            } else {
+                console.log(`Ranking available for ${locationDataModel.country}`)
+                let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
+                let totalPublicContributions = 0;
+                if(readCacheResponseModel.status) {
+                    for(const user of readCacheResponseModel.users){
+                        if(user.publicContributions > 10000){
+                            totalPublicContributions = totalPublicContributions + 10000;
+                        } else {
+                            totalPublicContributions = totalPublicContributions + (user.publicContributions);
+                        }
+                    }
+                    countriesArray.push({ name: formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.geoName), value: totalPublicContributions})
                 }
-                countriesArray.push({ name: formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.country), value: totalContributions})
             }
         }
         return { ranking: countriesArray};
@@ -13898,6 +13888,7 @@ let ReadConfigResponseModel =  function (status, content) {
         let locationArray = [];
         for (const location of locations) {
             let country = location.country;
+            let geoName = location.geoName;
             let imageUrl = location.imageUrl;
             if(validate(country)) {
                 let array = [];
@@ -13987,8 +13978,9 @@ module.exports = OutputFileResponseModel;
 /***/ 9810:
 /***/ ((module) => {
 
-let ReadFileResponseModel =  function (status, content) {
+let ReadFileResponseModel =  function (status, message, content) {
     this.status = status;
+    this.message = message;
     if(status) this.content = content;
 }
 module.exports = ReadFileResponseModel;
