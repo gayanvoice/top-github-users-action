@@ -1,4 +1,3 @@
-const LocationDataModel = require('../data/LocationDataModel');
 let ReadCheckpointResponseModel =  function (status, content) {
     let validate = function (value) {
         return !(value === '' || value === null || value === undefined);

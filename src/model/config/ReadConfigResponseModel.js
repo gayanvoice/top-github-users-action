@@ -10,11 +10,18 @@ let ReadConfigResponseModel =  function (status, content) {
             return true;
         }
     }
+    let setGeoName = function (geoName) {
+        if(validate(geoName)){
+            return geoName;
+        } else {
+            return null;
+        }
+    }
     let setLocations = function (locations) {
         let locationArray = [];
         for (const location of locations) {
             let country = location.country;
-            let geoName = location.geoName;
+            let geoName = setGeoName(location.geoName);
             let imageUrl = location.imageUrl;
             if(validate(country)) {
                 let array = [];

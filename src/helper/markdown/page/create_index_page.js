@@ -13,17 +13,6 @@ let createIndexPage = (function () {
         }
         return cities;
     }
-    let getNumberOfCities = function (readConfigResponseModel) {
-        let numberOfCities = 0;
-        for(const locationDataModel of readConfigResponseModel.locations) {
-            for (const location of locationDataModel.locations) {
-                if (locationDataModel.country !== location) {
-                    numberOfCities++;
-                }
-            }
-        }
-        return numberOfCities;
-    }
     let createListOfCountriesAndCitiesTable = function (indexUrl, readConfigResponseModel) {
         readConfigResponseModel.locations.sort((a,b) => a.country > b.country ? 1 : -1);
         let table = `<table>\n`;
@@ -52,12 +41,12 @@ let createIndexPage = (function () {
     }
     let create = function (githubUsernameAndRepository, readConfigResponseModel) {
         let markdown = headerComponent.create();
-        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">`;
-        markdown = markdown + `<img align="right" width="400" src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/images/banner/top-github-users-map.png" alt="top-github-users-by-country">\n\n`;
-        markdown = markdown + `</a>`;
+        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">\n`;
+        markdown = markdown + `\t<img align="right" width="400" src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/images/banner/top-github-users-map.png" alt="top-github-users-by-country">\n`;
+        markdown = markdown + `</a>\n\n`;
         markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
-        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
+        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${formatMarkdown.getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
         markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
         markdown = markdown + `The list can be found in [config.json](https://github.com/${githubUsernameAndRepository}/blob/main/config.json).\n\n`;
         markdown = markdown + `The project maintained by [gayanvoice](https://github.com/gayanvoice). `

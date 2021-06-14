@@ -12915,7 +12915,7 @@ let createRankingJsonFile = (function () {
     let create = async function (readConfigResponseModel) {
         let countriesArray = [];
         for await(const locationDataModel of readConfigResponseModel.locations){
-            if(locationDataModel.geoName === undefined){
+            if(locationDataModel.geoName === null){
                 console.log(`Ranking not available for ${locationDataModel.country}`)
             } else {
                 console.log(`Ranking available for ${locationDataModel.country}`)
@@ -13262,6 +13262,17 @@ let formatMarkdown = function () {
     let getCountryName = function (country) {
         return country.replace(' ', '_').toLowerCase();
     }
+    let getNumberOfCities = function (readConfigResponseModel) {
+        let numberOfCities = 0;
+        for(const locationDataModel of readConfigResponseModel.locations) {
+            for (const location of locationDataModel.locations) {
+                if (locationDataModel.country !== location) {
+                    numberOfCities++;
+                }
+            }
+        }
+        return numberOfCities;
+    }
     return {
         capitalizeTheFirstLetterOfEachWord: capitalizeTheFirstLetterOfEachWord,
         breakWords: breakWords,
@@ -13271,7 +13282,8 @@ let formatMarkdown = function () {
         getTwitterUsername: getTwitterUsername,
         getLocations: getLocations,
         getMinimumFollowersRequirement: getMinimumFollowersRequirement,
-        getCountryName: getCountryName
+        getCountryName: getCountryName,
+        getNumberOfCities: getNumberOfCities
 
     };
 }();
@@ -13372,10 +13384,12 @@ let createFollowersPage = (function () {
     let create = function (outputMarkdownModel) {
         let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(outputMarkdownModel.locationDataModel.country);
         let markdown = headerComponent.create(`Followers`, country);
-        markdown = markdown + `<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n\n`;
+        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">\n`;
+        markdown = markdown + `\t<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n`;
+        markdown = markdown + `</a>\n\n`;
         markdown = markdown + `The \`number of followers\` of users in ${country} on \`${formatMarkdown.getDate()}\`. `;
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
-        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries/states\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
@@ -13422,17 +13436,6 @@ let createIndexPage = (function () {
         }
         return cities;
     }
-    let getNumberOfCities = function (readConfigResponseModel) {
-        let numberOfCities = 0;
-        for(const locationDataModel of readConfigResponseModel.locations) {
-            for (const location of locationDataModel.locations) {
-                if (locationDataModel.country !== location) {
-                    numberOfCities++;
-                }
-            }
-        }
-        return numberOfCities;
-    }
     let createListOfCountriesAndCitiesTable = function (indexUrl, readConfigResponseModel) {
         readConfigResponseModel.locations.sort((a,b) => a.country > b.country ? 1 : -1);
         let table = `<table>\n`;
@@ -13461,12 +13464,12 @@ let createIndexPage = (function () {
     }
     let create = function (githubUsernameAndRepository, readConfigResponseModel) {
         let markdown = headerComponent.create();
-        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">`;
-        markdown = markdown + `<img align="right" width="400" src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/images/banner/top-github-users-map.png" alt="top-github-users-by-country">\n\n`;
-        markdown = markdown + `</a>`;
+        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">\n`;
+        markdown = markdown + `\t<img align="right" width="400" src="https://github.com/gayanvoice/top-github-users-monitor/raw/master/public/images/banner/top-github-users-map.png" alt="top-github-users-by-country">\n`;
+        markdown = markdown + `</a>\n\n`;
         markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
-        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
+        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${formatMarkdown.getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
         markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
         markdown = markdown + `The list can be found in [config.json](https://github.com/${githubUsernameAndRepository}/blob/main/config.json).\n\n`;
         markdown = markdown + `The project maintained by [gayanvoice](https://github.com/gayanvoice). `
@@ -13542,10 +13545,12 @@ let createPublicContributionsPage = (function () {
     let create = function (outputMarkdownModel) {
         let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(outputMarkdownModel.locationDataModel.country);
         let markdown = headerComponent.create(`Public Contributions`, country);
-        markdown = markdown + `<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n\n`;
+        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">\n`;
+        markdown = markdown + `\t<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n`;
+        markdown = markdown + `</a>\n\n`;
         markdown = markdown + `The \`public contributions\` by users in ${country} on \`${formatMarkdown.getDate()}\`. `;
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
-        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries/states\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
@@ -13622,10 +13627,12 @@ let createTotalContributionsPage = (function () {
     let create = function (outputMarkdownModel) {
         let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(outputMarkdownModel.locationDataModel.country);
         let markdown = headerComponent.create(`Total Contributions`, country);
-        markdown = markdown + `<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n\n`;
+        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">\n`;
+        markdown = markdown + `\t<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n`;
+        markdown = markdown + `</a>\n\n`;
         markdown = markdown + `The \`public contributions\` and \`private contributions\` by users in ${country} on \`${formatMarkdown.getDate()}\`. `;
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
-        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries/states\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
@@ -13743,7 +13750,7 @@ let Index = function () {
     // const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
-    const MAXIMUM_ITERATIONS = 10;
+    const MAXIMUM_ITERATIONS = 20;
     const MAXIMUM_ERROR_ITERATIONS = 4;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
@@ -13848,9 +13855,8 @@ module.exports = ReadCacheResponseModel;
 /***/ }),
 
 /***/ 603:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+/***/ ((module) => {
 
-const LocationDataModel = __nccwpck_require__(9827);
 let ReadCheckpointResponseModel =  function (status, content) {
     let validate = function (value) {
         return !(value === '' || value === null || value === undefined);
@@ -13884,11 +13890,18 @@ let ReadConfigResponseModel =  function (status, content) {
             return true;
         }
     }
+    let setGeoName = function (geoName) {
+        if(validate(geoName)){
+            return geoName;
+        } else {
+            return null;
+        }
+    }
     let setLocations = function (locations) {
         let locationArray = [];
         for (const location of locations) {
             let country = location.country;
-            let geoName = location.geoName;
+            let geoName = setGeoName(location.geoName);
             let imageUrl = location.imageUrl;
             if(validate(country)) {
                 let array = [];
@@ -13927,9 +13940,11 @@ module.exports = CheckpointDataModel;
 
 let LocationDataModel = function (
     country,
+    geoName,
     locations,
     imageUrl) {
     this.country = country;
+    this.geoName = geoName;
     this.locations = locations;
     this.imageUrl = imageUrl;
 }

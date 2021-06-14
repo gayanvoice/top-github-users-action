@@ -4,7 +4,7 @@ let createRankingJsonFile = (function () {
     let create = async function (readConfigResponseModel) {
         let countriesArray = [];
         for await(const locationDataModel of readConfigResponseModel.locations){
-            if(locationDataModel.geoName === undefined){
+            if(locationDataModel.geoName === null){
                 console.log(`Ranking not available for ${locationDataModel.country}`)
             } else {
                 console.log(`Ranking available for ${locationDataModel.country}`)

@@ -68,6 +68,17 @@ let formatMarkdown = function () {
     let getCountryName = function (country) {
         return country.replace(' ', '_').toLowerCase();
     }
+    let getNumberOfCities = function (readConfigResponseModel) {
+        let numberOfCities = 0;
+        for(const locationDataModel of readConfigResponseModel.locations) {
+            for (const location of locationDataModel.locations) {
+                if (locationDataModel.country !== location) {
+                    numberOfCities++;
+                }
+            }
+        }
+        return numberOfCities;
+    }
     return {
         capitalizeTheFirstLetterOfEachWord: capitalizeTheFirstLetterOfEachWord,
         breakWords: breakWords,
@@ -77,7 +88,8 @@ let formatMarkdown = function () {
         getTwitterUsername: getTwitterUsername,
         getLocations: getLocations,
         getMinimumFollowersRequirement: getMinimumFollowersRequirement,
-        getCountryName: getCountryName
+        getCountryName: getCountryName,
+        getNumberOfCities: getNumberOfCities
 
     };
 }();

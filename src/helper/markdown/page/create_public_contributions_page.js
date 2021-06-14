@@ -41,10 +41,12 @@ let createPublicContributionsPage = (function () {
     let create = function (outputMarkdownModel) {
         let country = formatMarkdown.capitalizeTheFirstLetterOfEachWord(outputMarkdownModel.locationDataModel.country);
         let markdown = headerComponent.create(`Public Contributions`, country);
-        markdown = markdown + `<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n\n`;
+        markdown = markdown + `<a href="https://gayanvoice.github.io/top-github-users/index.html">\n`;
+        markdown = markdown + `\t<img align="right" width="200" src="${outputMarkdownModel.locationDataModel.imageUrl}" alt="${country}">\n`;
+        markdown = markdown + `</a>\n\n`;
         markdown = markdown + `The \`public contributions\` by users in ${country} on \`${formatMarkdown.getDate()}\`. `;
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
-        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries/states\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
