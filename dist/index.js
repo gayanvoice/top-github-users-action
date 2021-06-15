@@ -13260,7 +13260,7 @@ let formatMarkdown = function () {
         return users[users.length - 1].followers;
     }
     let getCountryName = function (country) {
-        return country.replace(' ', '_').toLowerCase();
+        return country.replace(/\s/g, '_').toLowerCase();
     }
     let getNumberOfCities = function (readConfigResponseModel) {
         let numberOfCities = 0;
@@ -13298,7 +13298,7 @@ module.exports = formatMarkdown;
 const markdownFile = __nccwpck_require__(2025);
 let outputMarkdown = (function () {
     let setCountryName = function (country) {
-        return country.replace(' ', '_').toLowerCase();
+        return country.replace(/\s/g, '_').toLowerCase();
     }
     let setIndexPath = function () {
         return `README.md`;

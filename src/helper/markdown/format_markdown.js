@@ -66,7 +66,7 @@ let formatMarkdown = function () {
         return users[users.length - 1].followers;
     }
     let getCountryName = function (country) {
-        return country.replace(' ', '_').toLowerCase();
+        return country.replace(/\s/g, '_').toLowerCase();
     }
     let getNumberOfCities = function (readConfigResponseModel) {
         let numberOfCities = 0;
