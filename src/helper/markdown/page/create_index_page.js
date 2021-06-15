@@ -46,7 +46,7 @@ let createIndexPage = (function () {
         markdown = markdown + `</a>\n\n`;
         markdown = markdown + `List of most active GitHub users based on \`public contributions\` \`private contributions\` and \`number of followers\`  by country or state. `;
         markdown = markdown + `The list updated \`${formatMarkdown.getDate()}\`.\n\n`;
-        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries/states\` and \`${formatMarkdown.getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
+        markdown = markdown + `This repository contains users \`${readConfigResponseModel.locations.length} countries\` and \`${formatMarkdown.getNumberOfCities(readConfigResponseModel)} cities\`. \n`;
         markdown = markdown + `To get into the list you need to have minimum number of followers that varies in each country. `;
         markdown = markdown + `The list can be found in [config.json](https://github.com/${githubUsernameAndRepository}/blob/main/config.json).\n\n`;
         markdown = markdown + `The project maintained by [gayanvoice](https://github.com/gayanvoice). `
@@ -54,7 +54,7 @@ let createIndexPage = (function () {
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + socialMediaComponent.create(
             "Top GitHub Users By Country",
-            "List of most active github users based on public contributions, and number of followers by country or state",
+            "List of most active github users based on public contributions, total contributions, and number of followers by country",
             `https://github.com/${githubUsernameAndRepository}`);
         markdown = markdown + createListOfCountriesAndCitiesTable(
             `https://github.com/${githubUsernameAndRepository}`,
@@ -62,7 +62,7 @@ let createIndexPage = (function () {
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + socialMediaComponent.create(
             "Top GitHub Users By Country",
-            "List of most active github users based on public contributions, and number of followers by country or state",
+            "List of most active github users based on public contributions, total contributions, and number of followers by country",
             `https://github.com/${githubUsernameAndRepository}`);
         markdown = markdown + thirdPartyComponent.create();
         markdown = markdown + licenseComponent.create(githubUsernameAndRepository);
