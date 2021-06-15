@@ -1,6 +1,6 @@
 {
   "name": "top-github-users-monitor",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Fetch most active users by country in every 24 hours",
   "main": "dist/index.js",
   "scripts": {
