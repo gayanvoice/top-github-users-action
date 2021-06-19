@@ -1,4 +1,3 @@
-const formatMarkdown = require('../../markdown/format_markdown');
 const outputCache = require('../../../helper/cache/output_cache');
 let createRankingJsonFile = (function () {
     let create = async function (readConfigResponseModel) {
@@ -18,7 +17,7 @@ let createRankingJsonFile = (function () {
                             totalPublicContributions = totalPublicContributions + (user.publicContributions);
                         }
                     }
-                    countriesArray.push({ name: formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.geoName), value: totalPublicContributions})
+                    countriesArray.push({ name: locationDataModel.geoName, value: totalPublicContributions})
                 }
             }
         }

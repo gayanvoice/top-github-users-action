@@ -12909,7 +12909,6 @@ module.exports = createHtmlFile;
 /***/ 7818:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const formatMarkdown = __nccwpck_require__(3164);
 const outputCache = __nccwpck_require__(9862);
 let createRankingJsonFile = (function () {
     let create = async function (readConfigResponseModel) {
@@ -12929,7 +12928,7 @@ let createRankingJsonFile = (function () {
                             totalPublicContributions = totalPublicContributions + (user.publicContributions);
                         }
                     }
-                    countriesArray.push({ name: formatMarkdown.capitalizeTheFirstLetterOfEachWord(locationDataModel.geoName), value: totalPublicContributions})
+                    countriesArray.push({ name: locationDataModel.geoName, value: totalPublicContributions})
                 }
             }
         }

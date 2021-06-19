@@ -1,5 +1,5 @@
 {
-  "name": "top-github-users-monitor",
+  "name": "top-github-users-action",
   "version": "2.0.0",
   "description": "Fetch most active users by country in every 24 hours",
   "main": "dist/index.js",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gayanvoice/top-github-users-monitor.git"
+    "url": "git+https://github.com/gayanvoice/top-github-users-action.git"
   },
   "keywords": [
     "GitHub",
@@ -19,9 +19,9 @@
   "author": "Gayan Kuruppu",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gayanvoice/top-github-users-monitor/issues"
+    "url": "https://github.com/gayanvoice/top-github-users-action/issues"
   },
-  "homepage": "https://github.com/gayanvoice/top-github-users-monitor#readme",
+  "homepage": "https://github.com/gayanvoice/top-github-users-action#readme",
   "dependencies": {
     "@octokit/graphql": "4.6.2",
     "fs-extra": "9.1.0",
