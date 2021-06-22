@@ -26,7 +26,6 @@ let Index = function () {
     // const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
-    const MAXIMUM_ITERATIONS = 200;
     const MAXIMUM_ERROR_ITERATIONS = 4;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
@@ -43,7 +42,7 @@ let Index = function () {
         for await(const locationDataModel of readConfigResponseModel.locations){
             let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint);
             if(isCheckpoint){
-                let json = await requestOctokit.request(AUTH_KEY, MAXIMUM_ITERATIONS, MAXIMUM_ERROR_ITERATIONS, locationDataModel.locations);
+                let json = await requestOctokit.request(AUTH_KEY, MAXIMUM_ERROR_ITERATIONS, locationDataModel.locations);
                 await outputCache.saveCacheFile(locationDataModel.country, json);
             }
         }

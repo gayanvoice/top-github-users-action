@@ -13697,7 +13697,6 @@ let requestOctokit = function () {
         return new Promise(res => setTimeout(res, timeout));
     }
     let request = async function (AUTH_KEY,
-                                  MAXIMUM_ITERATIONS,
                                   MAXIMUM_ERROR_ITERATIONS,
                                   location) {
         let hasNextPage = true;
@@ -13711,7 +13710,7 @@ let requestOctokit = function () {
                 hasNextPage = octokitResponseModel.pageInfo.hasNextPage;
                 cursor = octokitResponseModel.pageInfo.endCursor;
                 for(const userDataModel of octokitResponseModel.node){
-                    console.log(`iterations:(${iterations}/${MAXIMUM_ITERATIONS}) errors:(${errors}/${MAXIMUM_ERROR_ITERATIONS}) ${userDataModel.login} ${userDataModel.followers}`)
+                    console.log(`iterations:(${iterations}) errors:(${errors}/${MAXIMUM_ERROR_ITERATIONS}) ${userDataModel.login} ${userDataModel.followers}`)
                     array.push(userDataModel)
                 }
                 let interval = randomIntFromInterval(1000, 5000)
@@ -13765,7 +13764,6 @@ let Index = function () {
     // const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
-    const MAXIMUM_ITERATIONS = 200;
     const MAXIMUM_ERROR_ITERATIONS = 4;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
@@ -13782,7 +13780,7 @@ let Index = function () {
         for await(const locationDataModel of readConfigResponseModel.locations){
             let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint);
             if(isCheckpoint){
-                let json = await requestOctokit.request(AUTH_KEY, MAXIMUM_ITERATIONS, MAXIMUM_ERROR_ITERATIONS, locationDataModel.locations);
+                let json = await requestOctokit.request(AUTH_KEY, MAXIMUM_ERROR_ITERATIONS, locationDataModel.locations);
                 await outputCache.saveCacheFile(locationDataModel.country, json);
             }
         }

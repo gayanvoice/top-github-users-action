@@ -17,7 +17,6 @@ let requestOctokit = function () {
         return new Promise(res => setTimeout(res, timeout));
     }
     let request = async function (AUTH_KEY,
-                                  MAXIMUM_ITERATIONS,
                                   MAXIMUM_ERROR_ITERATIONS,
                                   location) {
         let hasNextPage = true;
@@ -31,7 +30,7 @@ let requestOctokit = function () {
                 hasNextPage = octokitResponseModel.pageInfo.hasNextPage;
                 cursor = octokitResponseModel.pageInfo.endCursor;
                 for(const userDataModel of octokitResponseModel.node){
-                    console.log(`iterations:(${iterations}/${MAXIMUM_ITERATIONS}) errors:(${errors}/${MAXIMUM_ERROR_ITERATIONS}) ${userDataModel.login} ${userDataModel.followers}`)
+                    console.log(`iterations:(${iterations}) errors:(${errors}/${MAXIMUM_ERROR_ITERATIONS}) ${userDataModel.login} ${userDataModel.followers}`)
                     array.push(userDataModel)
                 }
                 let interval = randomIntFromInterval(1000, 5000)
