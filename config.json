@@ -1,5 +1,5 @@
 {
-  "devMode": "false",
+  "devMode": "true",
   "locations":[
     { "country":  "afghanistan", "geoName": "afghanistan", "cities": ["kabul", "kandahar", "herat", "Kunduz", "lashkargah", "ghazni", "khost", "zaranj"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Flag_of_Afghanistan.svg" },
     { "country":  "albania", "geoName": "albania", "cities": ["tirana", "durrës", "vlorë", "elbasan", "shkodër", "kamëz", "fier", "korçë"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/3/36/Flag_of_Albania.svg" },

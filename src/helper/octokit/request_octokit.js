@@ -32,7 +32,7 @@ let requestOctokit = function () {
                 hasNextPage = octokitResponseModel.pageInfo.hasNextPage;
                 cursor = octokitResponseModel.pageInfo.endCursor;
                 for(const userDataModel of octokitResponseModel.node){
-                    console.log(userDataModel.login, userDataModel.followers)
+                    console.log(`iterations:(${iterations}/${MAXIMUM_ITERATIONS}) errors:(${errors}/${MAXIMUM_ERROR_ITERATIONS}) ${userDataModel.login} ${userDataModel.followers}`)
                     array.push(userDataModel)
                 }
                 await setDelay(randomIntFromInterval(1000, 5000));
