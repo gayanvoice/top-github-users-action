@@ -13707,7 +13707,7 @@ let requestOctokit = function () {
         for (; hasNextPage;) {
             let octokitResponseModel = await octokit.request(AUTH_KEY, setQuery(location), cursor);
             if(octokitResponseModel.status){
-                // hasNextPage = octokitResponseModel.pageInfo.hasNextPage;
+                hasNextPage = octokitResponseModel.pageInfo.hasNextPage;
                 cursor = octokitResponseModel.pageInfo.endCursor;
                 for(const userDataModel of octokitResponseModel.node){
                     console.log(`iterations:(${iterations}) errors:(${errors}/${MAXIMUM_ERROR_ITERATIONS}) ${userDataModel.login} ${userDataModel.followers}`)
@@ -13721,7 +13721,7 @@ let requestOctokit = function () {
                 await setDelay(60000);
                 errors ++;
             }
-            if(iterations >= 200 || errors >= MAXIMUM_ERROR_ITERATIONS) hasNextPage = false;
+            if(errors >= MAXIMUM_ERROR_ITERATIONS) hasNextPage = false;
         }
         return array;
     }
