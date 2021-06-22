@@ -13722,7 +13722,7 @@ let requestOctokit = function () {
                 await setDelay(60000);
                 errors ++;
             }
-            if(iterations >= MAXIMUM_ITERATIONS || errors >= MAXIMUM_ERROR_ITERATIONS) hasNextPage = false;
+            if(errors >= MAXIMUM_ERROR_ITERATIONS) hasNextPage = false;
         }
         return array;
     }
