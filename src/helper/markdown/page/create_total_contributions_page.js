@@ -23,7 +23,7 @@ let createTotalContributionsPage = (function () {
             table = table + `\t\t<th>Total Contributions</th>\n`;
             table = table + `\t</tr>\n`;
             for (const user of readCacheResponseModel.users) {
-                if (user.publicContributions + user.privateContributions > 0 && index <= 256) {
+                if (user.publicContributions + user.privateContributions > 0 && index <= 1000) {
                     table = table + `\t<tr>\n`;
                     table = table + `\t\t<td>${index}</td>\n`;
                     table = table + `\t\t<td>\n`;

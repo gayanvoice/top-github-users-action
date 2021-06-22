@@ -26,7 +26,7 @@ let Index = function () {
     // const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
     const AUTH_KEY = process.env.CUSTOM_TOKEN;
     const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
-    const MAXIMUM_ITERATIONS = 100;
+    const MAXIMUM_ITERATIONS = 200;
     const MAXIMUM_ERROR_ITERATIONS = 4;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
