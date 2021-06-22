@@ -13715,7 +13715,7 @@ let requestOctokit = function () {
                     array.push(userDataModel)
                 }
                 let interval = randomIntFromInterval(1000, 5000)
-                console.log(`delay:${interval}ms hasNextPage:${hasNextPage} cursor:${cursor}`);
+                console.log(`interval:${interval}ms hasNextPage:${hasNextPage} cursor:${cursor}`);
                 await setDelay(interval);
                 iterations ++;
             } else {
