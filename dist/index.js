@@ -13781,7 +13781,18 @@ let Index = function () {
             let isCheckpoint = await getCheckpoint(readConfigResponseModel.locations, locationDataModel.country, readCheckpointResponseModel.checkpoint);
             if(isCheckpoint){
                 let json = await requestOctokit.request(AUTH_KEY, MAXIMUM_ERROR_ITERATIONS, locationDataModel.locations);
-                await outputCache.saveCacheFile(locationDataModel.country, json);
+                let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
+                if(readCacheResponseModel.status){
+                    if(readCacheResponseModel.users.length > json.length){
+                        console.log(`File not created cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
+                    } else {
+                        console.log(`File created cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
+                        await outputCache.saveCacheFile(locationDataModel.country, json);
+                    }
+                } else {
+                    console.log(`File not created octokit:${json.length}`);
+                    await outputCache.saveCacheFile(locationDataModel.country, json);
+                }
             }
         }
     }
