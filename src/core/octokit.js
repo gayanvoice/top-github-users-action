@@ -50,7 +50,7 @@ let octokit = function () {
     let request = async function (AUTH_KEY, locations, cursor) {
         try{
             const graphqlWithAuth = graphql.defaults(getHeader(AUTH_KEY));
-            const response = await graphqlWithAuth(getQuery(locations, 20, setCursor(cursor)));
+            const response = await graphqlWithAuth(getQuery(locations, 10, setCursor(cursor)));
             return new OctokitResponseModel(true, response);
         } catch (error) {
             console.log(error)

@@ -12602,7 +12602,7 @@ let octokit = function () {
     let request = async function (AUTH_KEY, locations, cursor) {
         try{
             const graphqlWithAuth = graphql.defaults(getHeader(AUTH_KEY));
-            const response = await graphqlWithAuth(getQuery(locations, 20, setCursor(cursor)));
+            const response = await graphqlWithAuth(getQuery(locations, 10, setCursor(cursor)));
             return new OctokitResponseModel(true, response);
         } catch (error) {
             console.log(error)
@@ -13713,7 +13713,7 @@ let requestOctokit = function () {
                     console.log(`iterations:(${iterations}) errors:(${errors}/${MAXIMUM_ERROR_ITERATIONS}) ${userDataModel.login} ${userDataModel.followers}`)
                     array.push(userDataModel)
                 }
-                let interval = randomIntFromInterval(1000, 10000)
+                let interval = randomIntFromInterval(1000, 5000)
                 console.log(`interval:${interval}ms hasNextPage:${hasNextPage} cursor:${cursor} users:${array.length}`);
                 await setDelay(interval);
                 iterations ++;
