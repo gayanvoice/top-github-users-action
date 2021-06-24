@@ -13696,9 +13696,7 @@ let requestOctokit = function () {
     const setDelay = function(timeout){
         return new Promise(res => setTimeout(res, timeout));
     }
-    let request = async function (AUTH_KEY,
-                                  MAXIMUM_ERROR_ITERATIONS,
-                                  location) {
+    let request = async function (AUTH_KEY, MAXIMUM_ERROR_ITERATIONS, location) {
         let hasNextPage = true;
         let cursor = null;
         let array = [];
