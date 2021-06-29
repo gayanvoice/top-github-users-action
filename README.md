@@ -8,7 +8,7 @@ Check your rank in GitHub! Get the list of active users in GitHub by country usi
 
 Go to Personal Access Tokens and click on Generate new token button. Give it any name and select `repo` `workflow` `admin:org` `user` options and click on Generate token button. ✂️ Copy the token.
 
-**3 —** 🔑 Go to your top-github-users repository and go to **Settings**, and select **Secrets** option from left side bar. Click on **New repository secret** button and enter **name** as **GITHUB_TOKEN** and 📋 paste the **personal access token** under **value**. Click on **Add secret** button.
+**3 —** 🔑 Go to your top-github-users repository and go to **Settings**, and select **Secrets** option from left side bar. Click on **New repository secret** button and enter **name** as **CUSTOM_TOKEN** and 📋 paste the **personal access token** under **value**. Click on **Add secret** button.
 
 **4 —** Go to your top-github-users repository and click on Actions tab. Click on **set up a workflow yourself** link to create a new workflow and paste the below content into yml file. Commit changes and click on **Run workflow** button.
 
