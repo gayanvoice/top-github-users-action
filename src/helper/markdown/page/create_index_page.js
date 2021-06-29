@@ -1,5 +1,6 @@
 const formatMarkdown = require('../format_markdown');
 const headerComponent = require('../component/header_component');
+const starComponent = require('../component/star_component');
 const socialMediaComponent = require('../component/social_media_component');
 const thirdPartyComponent = require('../component/third_party_component');
 const licenseComponent = require('../component/license_component');
@@ -51,6 +52,7 @@ let createIndexPage = (function () {
         markdown = markdown + `The list can be found in [config.json](https://github.com/${githubUsernameAndRepository}/blob/main/config.json).\n\n`;
         markdown = markdown + `The project maintained by [gayanvoice](https://github.com/gayanvoice). `
         markdown = markdown + `Don't forget to follow him on [GitHub](https://github.com/gayanvoice), [Twitter](https://twitter.com/gayanvoice), and [Medium](https://gayanvoice.medium.com/).\n\n`;
+        markdown = markdown + starComponent.create();
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + socialMediaComponent.create(
             "Top GitHub Users By Country",

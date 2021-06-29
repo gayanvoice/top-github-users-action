@@ -12978,12 +12978,14 @@ let headerComponent = function () {
         let markdown = ``;
         if(pageTitle === undefined && country === undefined){
             markdown = markdown + `# Top GitHub Users By Country `;
-            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/373383893/small/year.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/373383893/year.md)\n`
-            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/373383893/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/373383893/year.md)\n\n`;
+            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/373383893/small/week.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/373383893/week.md)\n`
+            markdown = markdown + `[![Top GitHub Users](https://github.com/gayanvoice/top-github-users/actions/workflows/action.yml/badge.svg)](https://github.com/gayanvoice/top-github-users/actions/workflows/action.yml) `;
+            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/373383893/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/373383893/week.md)\n\n`;
         } else {
             markdown = markdown + `# Top GitHub Users By ${pageTitle} in ${country} `;
-            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/373383893/small/year.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/373383893/year.md)\n`
-            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/373383893/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/373383893/year.md)\n\n`;
+            markdown = markdown + `[<img alt="Image of insights" src="https://github.com/gayanvoice/insights/blob/master/graph/373383893/small/week.png" height="24">](https://github.com/gayanvoice/insights/blob/master/readme/373383893/week.md)\n`
+            markdown = markdown + `[![Top GitHub Users](https://github.com/gayanvoice/top-github-users/actions/workflows/action.yml/badge.svg)](https://github.com/gayanvoice/top-github-users/actions/workflows/action.yml) `;
+            markdown = markdown + `[![Image of insights](https://github.com/gayanvoice/insights/blob/master/svg/373383893/badge.svg)](https://github.com/gayanvoice/insights/blob/master/readme/373383893/week.md)\n\n`;
         }
         return markdown;
     }
@@ -13168,6 +13170,28 @@ module.exports = socialMediaComponent;
 
 /***/ }),
 
+/***/ 8810:
+/***/ ((module) => {
+
+let starComponent = function () {
+    let create = function () {
+        let table = `<table>\n`;
+        table = table + `\t<tr>\n`;
+        table = table + `\t\t<td>\n`;
+        table = table + `\t\t\tDont forget to star ⭐ this repository\n`
+        table = table + `\t\t</td>\n`;
+        table = table + `\t</tr>\n`;
+        table = table + `</table>\n\n`;
+        return table;
+    }
+    return {
+        create: create,
+    };
+}();
+module.exports = starComponent;
+
+/***/ }),
+
 /***/ 6433:
 /***/ ((module) => {
 
@@ -13342,6 +13366,7 @@ module.exports = outputMarkdown;
 
 const formatMarkdown = __nccwpck_require__(3164);
 const headerComponent = __nccwpck_require__(5091);
+const starComponent = __nccwpck_require__(8810);
 const socialMediaComponent = __nccwpck_require__(8272);
 const shortcutMenuComponent = __nccwpck_require__(1049);
 const thirdPartyComponent = __nccwpck_require__(6433);
@@ -13395,6 +13420,7 @@ let createFollowersPage = (function () {
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + starComponent.create();
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
             outputMarkdownModel.locationDataModel.country,
@@ -13427,6 +13453,7 @@ module.exports = createFollowersPage;
 
 const formatMarkdown = __nccwpck_require__(3164);
 const headerComponent = __nccwpck_require__(5091);
+const starComponent = __nccwpck_require__(8810);
 const socialMediaComponent = __nccwpck_require__(8272);
 const thirdPartyComponent = __nccwpck_require__(6433);
 const licenseComponent = __nccwpck_require__(9805);
@@ -13478,6 +13505,7 @@ let createIndexPage = (function () {
         markdown = markdown + `The list can be found in [config.json](https://github.com/${githubUsernameAndRepository}/blob/main/config.json).\n\n`;
         markdown = markdown + `The project maintained by [gayanvoice](https://github.com/gayanvoice). `
         markdown = markdown + `Don't forget to follow him on [GitHub](https://github.com/gayanvoice), [Twitter](https://twitter.com/gayanvoice), and [Medium](https://gayanvoice.medium.com/).\n\n`;
+        markdown = markdown + starComponent.create();
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + socialMediaComponent.create(
             "Top GitHub Users By Country",
@@ -13508,6 +13536,7 @@ module.exports = createIndexPage;
 
 const formatMarkdown = __nccwpck_require__(3164);
 const headerComponent = __nccwpck_require__(5091);
+const starComponent = __nccwpck_require__(8810);
 const socialMediaComponent = __nccwpck_require__(8272);
 const shortcutMenuComponent = __nccwpck_require__(1049);
 const thirdPartyComponent = __nccwpck_require__(6433);
@@ -13561,6 +13590,7 @@ let createPublicContributionsPage = (function () {
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + starComponent.create();
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
             outputMarkdownModel.locationDataModel.country,
@@ -13593,6 +13623,7 @@ module.exports = createPublicContributionsPage;
 
 const formatMarkdown = __nccwpck_require__(3164);
 const headerComponent = __nccwpck_require__(5091);
+const starComponent = __nccwpck_require__(8810);
 const socialMediaComponent = __nccwpck_require__(8272);
 const shortcutMenuComponent = __nccwpck_require__(1049);
 const thirdPartyComponent = __nccwpck_require__(6433);
@@ -13648,6 +13679,7 @@ let createTotalContributionsPage = (function () {
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + starComponent.create();
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
             outputMarkdownModel.locationDataModel.country,

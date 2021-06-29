@@ -1,5 +1,6 @@
 const formatMarkdown = require('../format_markdown');
 const headerComponent = require('../component/header_component');
+const starComponent = require('../component/star_component');
 const socialMediaComponent = require('../component/social_media_component');
 const shortcutMenuComponent = require('../component/shortcut_menu_component');
 const thirdPartyComponent = require('../component/third_party_component');
@@ -53,6 +54,7 @@ let createFollowersPage = (function () {
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + starComponent.create();
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
             outputMarkdownModel.locationDataModel.country,
