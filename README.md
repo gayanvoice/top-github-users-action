@@ -10,7 +10,7 @@ Go to Personal Access Tokens and click on Generate new token button. Give it any
 
 **3 —** 🔑 Go to your top-github-users repository and go to **Settings**, and select **Secrets** option from left side bar. Click on **New repository secret** button and enter **name** as **CUSTOM_TOKEN** and 📋 paste the **personal access token** under **value**. Click on **Add secret** button.
 
-**4 —** Go to your top-github-users repository and click on Actions tab. Click on **set up a workflow yourself** link to create a new workflow and paste the below content into yml file. Commit changes and click on **Run workflow** button.
+**4 —** Go to your top-github-users repository and click on **Actions**. Click on **set up a workflow yourself** link to create a new workflow and paste the below content into yml file. Commit changes and click on **Run workflow** button.
 
 ```yml
 name: Top GitHub Users
@@ -35,7 +35,12 @@ jobs:
           CUSTOM_TOKEN: ${{ secrets.CUSTOM_TOKEN }}
 
 ```
-**5 —** 📄 Go to your top-github-users repository. Create a JSON file **config.json**. Copy the content and paste to the config.json.
+**5 —** 📄 Go to your top-github-users repository. Create a JSON file **checkpoint.json**. Copy the content and paste to the checkpoint.json.
+
+```json
+{"checkpoint":0}
+```
+**6 —** 📄 Go to your top-github-users repository. Create a JSON file **config.json**. Copy the content and paste to the config.json.
 
 ```json
 {
@@ -180,6 +185,7 @@ jobs:
   ]
 }
 ```
+**7 —** 📄 Go to your top-github-users repository. Click on **Actions**. Select the workflow **Top GitHub Users** and click on **Run workflow** button.
 ## 📦 Third party
 
 - [@octokit/graphql](https://www.npmjs.com/package/@octokit/graphql) - Send GraphQL requests to GitHub API.
