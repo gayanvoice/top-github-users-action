@@ -1,5 +1,9 @@
 # Top GitHub Users Action
 Check your rank in GitHub! Get the list of active users in GitHub by country using GitHub Graph API.
+[![Top GitHub Users by Country](https://github.com/gayanvoice/top-github-users-action/raw/master/public/images/readme/index.PNG)](https://github.com/gayanvoice/top-github-users)
+
+[![Top GitHub Users in India](https://github.com/gayanvoice/top-github-users-action/raw/master/public/images/readme/india.PNG)](https://github.com/gayanvoice/top-github-users/blob/main/markdown/public_contributions/india.md)
+[![Top GitHub Users in India](https://github.com/gayanvoice/top-github-users-action/raw/master/public/images/readme/table.PNG)](https://github.com/gayanvoice/top-github-users/blob/main/markdown/public_contributions/india.md)
 
 ```yml
 name: Top GitHub Users
