@@ -1,7 +1,10 @@
 # Top GitHub Users Action
 Check your rank in GitHub! Get the list of active users in GitHub by country using GitHub Graph API. Go to [gayanvoice/top-github-users](https://github.com/gayanvoice/top-github-users).
-[![Top GitHub Users by Country](https://github.com/gayanvoice/top-github-users-action/raw/master/public/images/readme/index.PNG)](https://github.com/gayanvoice/top-github-users)
+
+<img src="https://avatars.githubusercontent.com/u/44036562?s=200&v=4" height=200 width=200 />
+
 ## Setup
+
 **1 —** Create an empty repository and name the repository as `top-github-users`.
 
 **2 —** 🔒 Create a new personal access token with `repo` `workflow` `admin:org` `user` options
@@ -188,6 +191,16 @@ jobs:
 }
 ```
 **7 —** 📄 Go to your top-github-users repository -> Actions. Select the workflow *Top GitHub Users* and click on `Run workflow` button.
+
+## Run on your computer
+Clone this repository to your computer. 📋 paste the `personal access token` in `AUTH_KEY` in https://github.com/gayanvoice/top-github-users-action/blob/master/src/index.js and comment *process.env* secrets.
+```javascript
+    const AUTH_KEY = "ghp_vbmFdybMFCxWzvrgC*************";
+    const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
+    // const AUTH_KEY = process.env.CUSTOM_TOKEN;
+    // const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
+```
+
 ## 📦 Third party
 - [@octokit/graphql](https://www.npmjs.com/package/@octokit/graphql) - Send GraphQL requests to GitHub API.
 - [fs-extra](https://www.npmjs.com/package/fs-extra) - Creating directories and files.
