@@ -3,6 +3,14 @@
 
 Check your rank in GitHub! Get the list of active users in GitHub by country using GitHub Graph API. Go to [gayanvoice/top-github-users](https://github.com/gayanvoice/top-github-users).
 
+<table>
+	<tr>
+		<td>
+			Don't forget to star ⭐ this repository
+		</td>
+	</tr>
+</table>
+
 ## Setup
 
 **1 —** Create an empty repository and name the repository as `top-github-users`.
