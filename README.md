@@ -40,6 +40,11 @@ The action gets the list of users and order it by public contributions, total co
 				<img src="https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg" height=96 width=96 />
 			</a>
 		</td>
+		<td>
+			<a href="https://github.com/">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" height=96 width=96 />
+			</a>
+		</td>
 	</tr>
 </table>
 
