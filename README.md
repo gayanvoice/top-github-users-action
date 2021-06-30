@@ -3,6 +3,11 @@
 
 Check your rank in GitHub! Get the list of active users in GitHub by country using GitHub Graph API. Go to [gayanvoice/top-github-users](https://github.com/gayanvoice/top-github-users).
 
+### How it works?
+The list of countries and the cities are sorted in [config.json](https://github.com/gayanvoice/top-github-users/blob/main/config.json) as an array. The [octokit/graphql.js](https://www.npmjs.com/package/@octokit/graphql) fetches the data from GitHub Graph API. After the fetch is completed, it creates a JSON file by country name in [cache.json](https://github.com/gayanvoice/top-github-users/tree/main/cache). The [checkpoint.json](https://github.com/gayanvoice/top-github-users/blob/main/checkpoint.json) is used to checkpoint the country.
+
+The action gets the list of users and order it by public contributions, total contributions, and number of followers from cache to generate markdowns, and ranking.
+
 <table>
 	<tr>
 		<td>
