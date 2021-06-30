@@ -2,15 +2,17 @@
 Check your rank in GitHub! Get the list of active users in GitHub by country using GitHub Graph API. Go to [gayanvoice/top-github-users](https://github.com/gayanvoice/top-github-users).
 [![Top GitHub Users by Country](https://github.com/gayanvoice/top-github-users-action/raw/master/public/images/readme/index.PNG)](https://github.com/gayanvoice/top-github-users)
 ## Setup
-**1 —** Create an empty repository and name the rpository as `top-github-users`
+**1 —** Create an empty repository and name the repository as `top-github-users`.
 
 **2 —** 🔒 Create a new personal access token with `repo` `workflow` `admin:org` `user` options
 
-Go to Personal Access Tokens and click on Generate new token button. Give it any name and select `repo` `workflow` `admin:org` `user` options and click on Generate token button. ✂️ Copy the token.
+Go to Settings -> Developer settings -> Personal Access Tokens and click on *Generate new token* button. Give it any name and select `repo` `workflow` `admin:org -> read:org` `user -> read:user` options and click on *Generate token* button. ✂️ Copy the token.
 
-**3 —** 🔑 Go to your top-github-users repository and go to **Settings**, and select **Secrets** option from left side bar. Click on **New repository secret** button and enter **name** as **CUSTOM_TOKEN** and 📋 paste the **personal access token** under **value**. Click on **Add secret** button.
+**3 —** 🔑 Create a repository secret
 
-**4 —** Go to your top-github-users repository and click on **Actions**. Click on **set up a workflow yourself** link to create a new workflow and paste the below content into yml file. Commit changes and click on **Run workflow** button.
+Go to your top-github-users repository -> Settings -> Secrets and click on *New repository secret* button and enter *name* as `CUSTOM_TOKEN` and 📋 paste the `personal access token` under *value*. Click on *Add secret* button.
+
+**4 —** Go to your top-github-users repository -> Actions and click on *set up a workflow yourself* link to create a new workflow and paste the below content into yml file. Commit changes.
 
 ```yml
 name: Top GitHub Users
@@ -35,12 +37,12 @@ jobs:
           CUSTOM_TOKEN: ${{ secrets.CUSTOM_TOKEN }}
 
 ```
-**5 —** 📄 Go to your top-github-users repository. Create a JSON file **checkpoint.json**. Copy the content and paste to the checkpoint.json.
+**5 —** 📄 Go to your top-github-users repository. Create a JSON file *checkpoint.json*. Copy the content and paste to the checkpoint.json and commit changes.
 
 ```json
 {"checkpoint":0}
 ```
-**6 —** 📄 Go to your top-github-users repository. Create a JSON file **config.json**. Copy the content and paste to the config.json.
+**6 —** 📄 Go to your top-github-users repository. Create a JSON file *config.json*. Copy the content and paste to the config.json and commit changes.
 
 ```json
 {
@@ -185,14 +187,12 @@ jobs:
   ]
 }
 ```
-**7 —** 📄 Go to your top-github-users repository. Click on **Actions**. Select the workflow **Top GitHub Users** and click on **Run workflow** button.
+**7 —** 📄 Go to your top-github-users repository -> Actions. Select the workflow *Top GitHub Users* and click on `Run workflow` button.
 ## 📦 Third party
-
 - [@octokit/graphql](https://www.npmjs.com/package/@octokit/graphql) - Send GraphQL requests to GitHub API.
 - [fs-extra](https://www.npmjs.com/package/fs-extra) - Creating directories and files.
 - [simple-git](https://www.npmjs.com/package/simple-git) - Handling Git commands.
 ## 📄 License
-
 - GitHub Action - [gayanvoice/top-github-users-action](https://github.com/gayanvoice/top-github-users-action)
 - Repository - [gayanvoice/top-github-users](https://github.com/gayanvoice/top-github-users)
 - Data in the `./cache` directory - [Open Database License](https://opendatacommons.org/licenses/odbl/1-0/)
