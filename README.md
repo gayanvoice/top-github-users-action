@@ -192,15 +192,22 @@ jobs:
 ```
 **7 —** 📄 Go to your top-github-users repository -> Actions. Select the workflow *Top GitHub Users* and click on `Run workflow` button.
 
-## Run on your computer
-Clone this repository to your computer. 📋 paste the `personal access token` in `AUTH_KEY` in https://github.com/gayanvoice/top-github-users-action/blob/master/src/index.js and comment *process.env* secrets.
+## Deploy local
+**1 —** Clone this repository to your computer.
+
+**2 —** Edit *index.js*
+📋 paste the `personal access token` in `AUTH_KEY` in https://github.com/gayanvoice/top-github-users-action/blob/master/src/index.js and comment *process.env* secrets.
 ```javascript
     const AUTH_KEY = "ghp_vbmFdybMFCxWzvrgC*************";
     const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
     // const AUTH_KEY = process.env.CUSTOM_TOKEN;
     // const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
 ```
-
+**3 —** Run `test`*
+Run on command line.
+```shell
+npm test
+```
 ## 📦 Third party
 - [@octokit/graphql](https://www.npmjs.com/package/@octokit/graphql) - Send GraphQL requests to GitHub API.
 - [fs-extra](https://www.npmjs.com/package/fs-extra) - Creating directories and files.
