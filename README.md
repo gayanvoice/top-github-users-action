@@ -11,6 +11,34 @@ Check your rank in GitHub! Get the list of active users in GitHub by country usi
 	</tr>
 </table>
 
+## Technologies
+
+<table>
+	<tr>
+		<td>
+			<a href="https://www.w3schools.com/js/">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/9/99/Unofficial_JavaScript_logo_2.svg" height=96 width=96 />
+			</a>
+		</td>
+		<td>
+			<a href="https://github.com/features/actions">
+				<img src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg" height=96 width=96 />
+			</a>
+		</td>
+		<td>
+			<a href="https://nodejs.org/en/">
+				<img src="https://nodejs.org/static/images/logos/nodejs-new-pantone-white.svg" height=96 width=96 />
+			</a>
+		</td>
+		<td>
+			<a href="https://docs.github.com/en/graphql">
+				<img src="https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg" height=96 width=96 />
+			</a>
+		</td>
+		
+	</tr>
+</table>
+
 ## Setup
 
 **1 —** Create an empty repository and name the repository as `top-github-users`.
