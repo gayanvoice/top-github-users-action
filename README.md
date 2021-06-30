@@ -40,12 +40,12 @@ jobs:
           CUSTOM_TOKEN: ${{ secrets.CUSTOM_TOKEN }}
 
 ```
-**5 —** 📄 Go to your top-github-users repository. Create a JSON file *checkpoint.json*. Copy the content and paste to the checkpoint.json and commit changes.
+**5 —** Go to your top-github-users repository. Create a JSON file *checkpoint.json*. Copy the content and paste to the checkpoint.json and commit changes.
 
 ```json
 {"checkpoint":0}
 ```
-**6 —** 📄 Go to your top-github-users repository. Create a JSON file *config.json*. Copy the content and paste to the config.json and commit changes.
+**6 —** Go to your top-github-users repository. Create a JSON file *config.json*. Copy the content and paste to the config.json and commit changes.
 
 ```json
 {
