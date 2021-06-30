@@ -1,4 +1,6 @@
-# Top GitHub Users Action <img src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg" height=48 width=48 />
+# Top GitHub Users Action <img src="https://github.githubassets.com/images/modules/site/features/actions-icon-actions.svg" height=48 width=48 /> [<img alt="Image of my-profile-views-counter" src="https://github.com/gayanvoice/my-profile-views-counter/blob/master/graph/373376349/small/week.png" height="20">](https://github.com/gayanvoice/my-profile-views-counter/blob/master/readme/373376349/week.md)
+[![Image of my-profile-views-counter](https://github.com/gayanvoice/my-profile-views-counter/blob/master/svg/373376349/badge.svg)](https://github.com/gayanvoice/my-profile-views-counter/blob/master/readme/373376349/week.md)
+
 Check your rank in GitHub! Get the list of active users in GitHub by country using GitHub Graph API. Go to [gayanvoice/top-github-users](https://github.com/gayanvoice/top-github-users).
 
 ## Setup
