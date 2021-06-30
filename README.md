@@ -35,7 +35,6 @@ Check your rank in GitHub! Get the list of active users in GitHub by country usi
 				<img src="https://upload.wikimedia.org/wikipedia/commons/1/17/GraphQL_Logo.svg" height=96 width=96 />
 			</a>
 		</td>
-		
 	</tr>
 </table>
 
