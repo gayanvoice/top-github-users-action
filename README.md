@@ -121,7 +121,7 @@ jobs:
     // const AUTH_KEY = process.env.CUSTOM_TOKEN;
     // const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
 ```
-**3 —** Run `test`*
+**3 —** Run `test`
 Run on command line.
 ```shell
 npm test
