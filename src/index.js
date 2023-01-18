@@ -4,6 +4,10 @@
  * (c) 2021 gayanvoice
  * Released under the MIT License
  */
+const AUTH_KEY = "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";
+const GITHUB_USERNAME_AND_REPOSITORY = 'larrymahumot/top-github-users';
+// const AUTH_KEY = process.env.CUSTOM_TOKEN;
+// const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
 const pullGit = require('./helper/git/pull-git');
 const commitGit = require('./helper/git/commit-git');
 const pushGit = require('./helper/git/push-git');
