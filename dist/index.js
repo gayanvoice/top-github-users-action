@@ -13815,7 +13815,14 @@ let Index = function () {
                 let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
                 if(readCacheResponseModel.status){
                     if(readCacheResponseModel.users.length > json.length){
-                        console.log(`octokit error cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
+                        if(json.length > 750) {
+                            console.log(`request success minimum:750 cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
+                            await outputCache.saveCacheFile(locationDataModel.country, json);
+                        }
+                        else
+                        {
+                            console.log(`octokit error minimum:750 cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
+                        }
                     } else {
                         console.log(`request success cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
                         await outputCache.saveCacheFile(locationDataModel.country, json);
