@@ -55,7 +55,7 @@ let createTotalContributionsPage = (function () {
         markdown = markdown + `The \`public contributions\` and \`private contributions\` by users in ${country} on \`${formatMarkdown.getDate()}\`. `;
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
-        markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} contribution(s)\` to be on this list.\n\n`;
         markdown = markdown + starComponent.create();
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
