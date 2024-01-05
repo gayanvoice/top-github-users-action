@@ -22,10 +22,10 @@ const requestOctokit = require('./helper/octokit/request_octokit');
 const formatMarkdown = require('./helper/markdown/format_markdown');
 const OutputMarkdownModel = require('./model/markdown/OutputMarkdownModel');
 let Index = function () {
-    // const AUTH_KEY = "";
-    // const GITHUB_USERNAME_AND_REPOSITORY = 'gayanvoice/top-github-users';
-    const AUTH_KEY = process.env.CUSTOM_TOKEN;
-    const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
+     const AUTH_KEY = "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";
+     const GITHUB_USERNAME_AND_REPOSITORY = 'fdeniz07/top-github-users';
+    //const AUTH_KEY = process.env.CUSTOM_TOKEN;
+    //const GITHUB_USERNAME_AND_REPOSITORY = process.env.GITHUB_REPOSITORY;
     const MAXIMUM_ERROR_ITERATIONS = 4;
     let getCheckpoint = async function (locationsArray, country, checkpoint) {
         let indexOfTheCountry = locationsArray.findIndex(location => location.country === country);
