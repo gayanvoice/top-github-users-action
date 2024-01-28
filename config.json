@@ -106,7 +106,7 @@
     { "country":  "romania", "geoName": "romania", "cities": ["bucharest", "constanța"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/73/Flag_of_Romania.svg" },
     { "country":  "russia", "geoName": "russia", "cities": ["moscow", "saint-petersburg", "yekaterinburg", "novosibirsk", "kazan", "omsk", "volgograd", "chelyabinsk", "krasnoyarsk"], "imageUrl": "https://upload.wikimedia.org/wikipedia/en/f/f3/Flag_of_Russia.svg" },
     { "country":  "rwanda", "geoName": "rwanda", "cities": ["kigali"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/17/Flag_of_Rwanda.svg" },
-    { "country":  "saudi arabia", "geoName": "saudi arabia", "cities": ["riyadh", "jeddah", "mecca", "medina", "khamismushait", "dammam", "abha"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" },
+    { "country":  "saudi arabia", "geoName": "saudi arabia", "cities": ["riyadh", "jeddah", "mecca", "medina", "khamismushait", "dammam", "abha", "bishah", "yanbu"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0d/Flag_of_Saudi_Arabia.svg" },
     { "country":  "senegal", "geoName": "senegal", "cities": ["dakar"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Flag_of_Senegal.svg" },
     { "country":  "serbia", "geoName": "serbia", "cities": ["belgrade"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Flag_of_Serbia.svg" },
     { "country":  "sierra leone", "geoName": "sierra leone", "cities": ["freetown"], "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/17/Flag_of_Sierra_Leone.svg" },
