@@ -30,6 +30,8 @@ let formatMarkdown = function () {
     let getCompany = function (company) {
         if(company === 'undefined value'){
             return `No Company`;
+        } else if (company.startsWith('@')) {
+            return `<a href="https://github.com/${company.substring(1)}">${company}</a>`
         } else {
             return breakWords(company, 4)
         }
