@@ -45,19 +45,26 @@ let Index = function () {
                 let json = await requestOctokit.request(AUTH_KEY, MAXIMUM_ERROR_ITERATIONS, locationDataModel.locations);
                 let readCacheResponseModel =  await outputCache.readCacheFile(locationDataModel.country);
                 if(readCacheResponseModel.status){
-                    if(readCacheResponseModel.users.length > json.length){
-                        if(json.length > 750) {
-                            console.log(`request success minimum:750 cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
-                            await outputCache.saveCacheFile(locationDataModel.country, json);
-                        }
-                        else
-                        {
-                            console.log(`octokit error minimum:750 cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
-                        }
-                    } else {
-                        console.log(`request success cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
-                        await outputCache.saveCacheFile(locationDataModel.country, json);
-                    }
+                    const LARGE_COUNTRY_THRESHOLD = 750;
+const SMALL_COUNTRY_TOLERANCE = 0.9;
+
+if(readCacheResponseModel.users.length > json.length){
+    let isValidLargeCountryResult = json.length > LARGE_COUNTRY_THRESHOLD;
+    let isValidSmallCountryResult = readCacheResponseModel.users.length <= LARGE_COUNTRY_THRESHOLD
+        && json.length >= readCacheResponseModel.users.length * SMALL_COUNTRY_TOLERANCE;
+
+    if(isValidLargeCountryResult || isValidSmallCountryResult) {
+        console.log(`request success cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
+        await outputCache.saveCacheFile(locationDataModel.country, json);
+    }
+    else
+    {
+        console.log(`octokit error minimum:750 cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
+    }
+} else {
+    console.log(`request success cache:${readCacheResponseModel.users.length} octokit:${json.length}`);
+    await outputCache.saveCacheFile(locationDataModel.country, json);
+}
                 } else {
                     console.log(`request success octokit:${json.length}`);
                     await outputCache.saveCacheFile(locationDataModel.country, json);
