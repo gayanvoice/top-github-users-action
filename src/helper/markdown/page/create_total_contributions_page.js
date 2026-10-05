@@ -6,7 +6,7 @@ const shortcutMenuComponent = require('../component/shortcut_menu_component');
 const thirdPartyComponent = require('../component/third_party_component');
 const licenseComponent = require('../component/license_component');
 let createTotalContributionsPage = (function () {
-    let createUserTableByPublicContributions = function (readCacheResponseModel) {
+    let createUserTableByPublicContributions = function (readCacheResponseModel, country) {
         readCacheResponseModel.users.sort((a, b) => parseFloat(b.publicContributions + b.privateContributions) - parseFloat(a.publicContributions + a.privateContributions));
         let index = 1;
         let table = ``;
@@ -66,7 +66,7 @@ let createTotalContributionsPage = (function () {
             `Top GitHub Users By Total Contributions in ${country}`,
             "List of most active github users based on total contributions by country",
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}/blob/main/markdown/total_contributions/${formatMarkdown.getCountryName(outputMarkdownModel.locationDataModel.country)}.md`);
-        markdown = markdown + createUserTableByPublicContributions(outputMarkdownModel.readCacheResponseModel);
+        markdown = markdown + createUserTableByPublicContributions(outputMarkdownModel.readCacheResponseModel, outputMarkdownModel.locationDataModel.country);
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + socialMediaComponent.create(
             `Top GitHub Users By Total Contributions in ${country}`,

@@ -5,8 +5,9 @@ const socialMediaComponent = require('../component/social_media_component');
 const shortcutMenuComponent = require('../component/shortcut_menu_component');
 const thirdPartyComponent = require('../component/third_party_component');
 const licenseComponent = require('../component/license_component');
+const rankingBadgeComponent = require('../component/ranking_badge_component');
 let createPublicContributionsPage = (function () {
-    let createUserTableByPublicContributions = function (readCacheResponseModel) {
+    let createUserTableByPublicContributions = function (readCacheResponseModel, country) {
         readCacheResponseModel.users.sort((a, b) => parseFloat(b.publicContributions) - parseFloat(a.publicContributions));
         let index = 1;
         let table = ``;
@@ -29,7 +30,7 @@ let createPublicContributionsPage = (function () {
                     table = table + `\t\t<td>\n`;
                     table = table + `\t\t\t<a href="https://github.com/${user.login}">\n`;
                     table = table + `\t\t\t\t<img src="${user.avatarUrl}" width="24" alt="Avatar of ${user.login}"> ${user.login}\n`;
-                    table = table + `\t\t\t</a><br/>\n`;
+                    table = table + `\t\t\t</a> · ${rankingBadgeComponent.createUserCopyLink(country, user.login)}<br/>\n`;
                     table = table + `\t\t\t${formatMarkdown.getName(user.name)}\n`;
                     table = table + `\t\t</td>\n`;
                     table = table + `\t\t<td>${formatMarkdown.getCompany(user.company)}</td>\n`;
@@ -54,6 +55,7 @@ let createPublicContributionsPage = (function () {
         markdown = markdown + `This list contains users from ${formatMarkdown.getLocations(outputMarkdownModel.locationDataModel)}.\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readConfigResponseModel.locations.length} countries\` and \`${formatMarkdown.getNumberOfCities(outputMarkdownModel.readConfigResponseModel)} cities\` can be found [here](https://github.com/${outputMarkdownModel.githubUsernameAndRepository}).\n\n`;
         markdown = markdown + `There are \`${outputMarkdownModel.readCacheResponseModel.users.length} users\`  in ${country}. You need at least \`${formatMarkdown.getMinimumFollowersRequirement(outputMarkdownModel.readCacheResponseModel)} followers\` to be on this list.\n\n`;
+        markdown = markdown + rankingBadgeComponent.createCountryParagraph(outputMarkdownModel.locationDataModel.country);
         markdown = markdown + starComponent.create();
         markdown = markdown + shortcutMenuComponent.create(
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}`,
@@ -64,7 +66,7 @@ let createPublicContributionsPage = (function () {
             `Top GitHub Users By Public Contributions in ${country}`,
             "List of most active github users based on public contributions by country",
             `https://github.com/${outputMarkdownModel.githubUsernameAndRepository}/blob/main/markdown/public_contributions/${formatMarkdown.getCountryName(outputMarkdownModel.locationDataModel.country)}.md`);
-        markdown = markdown + createUserTableByPublicContributions(outputMarkdownModel.readCacheResponseModel);
+        markdown = markdown + createUserTableByPublicContributions(outputMarkdownModel.readCacheResponseModel, outputMarkdownModel.locationDataModel.country);
         markdown = markdown + `### 🚀 Share on\n\n`;
         markdown = markdown + socialMediaComponent.create(
             `Top GitHub Users By Public Contributions in ${country}`,
