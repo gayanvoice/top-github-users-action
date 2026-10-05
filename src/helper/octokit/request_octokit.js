@@ -22,7 +22,7 @@ let requestOctokit = function () {
         let array = [];
         let iterations = 0;
         let errors = 0;
-        for (; hasNextPage && iterations < 5;) {
+        for (; hasNextPage;) {
             let octokitResponseModel = await octokit.request(AUTH_KEY, setQuery(location), cursor);
             if(octokitResponseModel.status){
                 hasNextPage = octokitResponseModel.pageInfo.hasNextPage;
