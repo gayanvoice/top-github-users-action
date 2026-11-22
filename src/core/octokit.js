@@ -10,7 +10,7 @@ let octokit = function () {
     }
     let getQuery = function (locations, numberOfUsers, cursor) {
         return { query: `query {
-              search(type: USER, query:"${locations} sort:followers-desc", first:${numberOfUsers}, after:${cursor}) {
+              search(type: USER, query:"${locations} type:user sort:followers-desc", first:${numberOfUsers}, after:${cursor}) {
                 edges {
                   node {
                     __typename
